@@ -112,12 +112,13 @@ EA.onCtx = (c) => { const n = CTXN(c); fab.setAttribute('aria-label', n ? 'Pergu
    Nunca exibe o dado privado usado — só a categoria da fonte. */
 const SRC = {
   material: ['source-material mat', 'book', 'No seu material'],
-  school:   ['source-school', 'layers', 'Contexto escolar'],
-  profile:  ['source-profile', 'user', 'Seu contexto'],
+  school:   ['source-school', 'layers', 'No seu colégio'],
+  profile:  ['source-profile', 'user', 'Do seu contexto'],
   extra:    ['source-general ext', 'facet', 'EXPLICA AI complementa'],
-  general:  ['source-general ext', 'facet', 'EXPLICA AI complementa'],
+  general:  ['source-general ext', 'facet', 'Conhecimento geral'],
   fresh:    ['source-fresh', 'eye', 'Informação atualizada'],
-  none:     ['none', 'alert', 'Fora deste caderno'],
+  offline:  ['none', 'alert', 'Modo local'],
+  none:     ['none', 'alert', 'Modo local'],
 };
 function srcBadge(src) { const d = SRC[src]; return d ? `<span class="src-b ${d[0]}">${EA.icon(d[1], 14)}${d[2]}</span>` : ''; }
 EA.srcBadge = srcBadge;

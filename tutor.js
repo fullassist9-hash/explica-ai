@@ -9,6 +9,7 @@ const EMO = /[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\u200d\uFE0F]/gu;
 
 const INTENTS = [
   ['mediaEmotion', /\b(triste|feliz|nervoso|ansioso|com medo|chateado)\b.*\b(video|foto|post)\b|\b(video|foto|post)\b.*\b(triste|feliz|nervoso|ansioso|medo|chateado)\b/],
+  ['aboutMe', /\b(o que (voce|vc) (sabe|lembra|conhece)( me dizer)? (sobre|de) mim|o que (voce|vc) sabe de mim|me conhece|fala (sobre|de) mim)\b/],
   ['nav',     /\b(volta|voltar|abre|abrir|ir) (pra|para|pro|ao|a|o)\b.*\b(geografia|historia|matematica|ciencias|portugues|ingles|caderno)\b/],
   ['private', /\b(qual|que)\b.*\b(meu time|minha geracao|minha nota|minhas notas|materia (favorita|preferida)|meu clube)\b|\b(proxima prova|minha prova|ja caiu numa prova|boletim)\b|\b(clube|time)\b.*\b(jogava|joguei|jogo)\b/],
   ['noFootball', /\bsem futebol\b|\bnao (use|usa|quero) futebol\b/],
@@ -28,6 +29,26 @@ const INTENTS = [
 const PRONOUN = /\b(isso|isto|aquilo|ele|ela|esse|essa|este|esta|dele|dela|disso)\b/;
 const LABEL = { easier: 'Explique mais fácil', other: 'Explique de outra forma', example: 'Dê um exemplo', compare: 'Faça uma comparação', visual: 'Mostre visualmente', summary: 'Resuma', test: 'Me teste', exer: 'Crie exercícios' };
 EA.TUTOR_CHIPS = Object.entries(LABEL);
+
+/* Modo local (offline) — limitação TÉCNICA do modo, nunca fronteira da inteligência do EXPLICA AI.
+   O Caderno é contexto, não limite: pergunta de outro assunto recebe aviso honesto de modo local (Cognitive Core §30). */
+const OFFLINE_KIND = [
+  ['sport', /\b(flamengo|neymar|arrascaeta|futebol|futsal|campeonato|gol|gols|jogador|time|libertadores|brasileirao|copa|champions)\b/],
+  ['fresh', /\b(hoje|ontem|agora|placar|noticia|resultado|ultim[oa]s?|tabela|classificacao)\b/],
+  ['game', /\b(game|games|fifa|minecraft|fortnite|roblox|videogame)\b/],
+];
+const OFFLINE_TEXT = {
+  personal: 'Neste modo, a sua memória pessoal não está disponível, então não vou chutar nada sobre você. Quando você entrar com a sua conta, eu consigo lembrar do que já foi registrado.',
+  sport: 'Adoro esse assunto, mas agora estou no modo local e não consigo conversar sobre futebol com segurança. Quando a conexão voltar, a gente conversa.',
+  fresh: 'Isso precisa de informação atualizada, e no modo local eu não consigo checar notícias ou resultados. Quando a conexão voltar, eu confiro para você.',
+  game: 'Agora estou no modo local e não consigo conversar sobre games com segurança. Quando a conexão voltar, a gente conversa.',
+  general: 'Agora estou no modo local, sem a parte da minha inteligência que responde sobre qualquer assunto. Assim que a conexão voltar, eu te respondo isso direitinho.',
+};
+function offlineAnswer(t, pack) {
+  const kind = (OFFLINE_KIND.find(([, re]) => re.test(t)) || ['general'])[0];
+  const sug = pack ? pack.concepts.filter(x => x.src).slice(0, 4).map(x => x.n) : [];
+  return { text: OFFLINE_TEXT[kind] + (sug.length ? ` Enquanto isso, posso explicar o seu Caderno ${pack.title}: ${sug.join(', ')}.` : ''), src: 'offline' };
+}
 
 function findConcept(pack, text) {
   const t = ' ' + norm(text) + ' ';
@@ -82,7 +103,8 @@ EA.Tutor = {
     let intent = forcedMode || (INTENTS.find(([, re]) => re.test(t)) || [null])[0];
 
     if (intent === 'mediaEmotion') return { text: 'Eu não consigo saber como alguém estava se sentindo olhando um vídeo ou uma foto. Se quiser, me conta você como foi aquele dia.', src: 'meta' };
-    if (intent === 'private') return { text: 'Essa informação fica na memória privada do EXPLICA AI, que ainda não está conectada neste aparelho. Não vou chutar.', src: 'meta' };
+    if (intent === 'aboutMe') return { text: OFFLINE_TEXT.personal, src: 'offline' };
+    if (intent === 'private') return { text: 'Essa informação fica na memória privada do EXPLICA AI, que não está disponível neste modo. Não vou chutar.', src: 'offline' };
     if (intent === 'noFootball') { if (S) S.noFootball = true; return { text: 'Combinado: sem exemplos de futebol daqui pra frente.', src: 'meta' }; }
     if (intent === 'nav') {
       const want = (t.match(/\b(geografia|historia|matematica|ciencias|portugues|ingles)\b/) || [])[1];
@@ -112,10 +134,7 @@ EA.Tutor = {
     let c = findConcept(pack, input);
     const recent = this.recent && byId(pack, this.recent);
     if (!c && (PRONOUN.test(t) || intent)) c = recent || byId(pack, ctx.screen.concept) || (last && byId(pack, last.concept));
-    if (!c) {
-      const sug = pack.concepts.filter(x => x.src).slice(0, 5).map(x => x.n);
-      return { text: `Isso não está no seu caderno ${pack.title}. Posso explicar temas como: ${sug.join(', ')}.`, src: 'none' };
-    }
+    if (!c) return offlineAnswer(t, pack);
 
     if (intent === 'test' || intent === 'exer') {
       const qs = pack.questions.filter(q => q.c === c.id || (c.rel || []).includes(q.c));
@@ -165,11 +184,13 @@ EA.AI = {
           const ctx = EA.Tutor.context();
           const r = await fetch(EA.settings.api_base.replace(/\/$/, '') + '/v1/explain', { method: 'POST', signal: ac.signal,
             headers: { 'content-type': 'application/json', authorization: 'Bearer ' + EA.session.access_token },
-            body: JSON.stringify({ profile_id: ctx.active_profile && ctx.active_profile.id, question: q, mode: m || null,
+            body: JSON.stringify({ profile_id: ctx.active_profile && ctx.active_profile.id, question: q, mode: m || null, session_id: EA.session.session_id || null,
               screen: { pack_id: ctx.active_content_pack && ctx.active_content_pack.id, screen: ctx.screen.title || null, concept: ctx.screen.concept || null } }) });
           if (!r.ok) throw new Error('api ' + r.status);
           const j = await r.json(), k = (j.provenance_ui && j.provenance_ui[0] && j.provenance_ui[0].key) || 'general';
-          return { text: j.text, src: k === 'meta' ? 'meta' : k, mode: j.strategy ? j.strategy.toLowerCase() : null, provider: j.provider };
+          const nav = j.action && j.action.type === 'OPEN_PACK' ? EA.packsFor(ctx.active_profile && ctx.active_profile.id).find(p => !j.action.subject || norm(p.subject) === j.action.subject) : null;
+          return { text: j.text, src: k === 'meta' ? 'meta' : k, mode: j.strategy ? j.strategy.toLowerCase() : null, provider: j.provider,
+            link: nav ? { href: `#/c/${nav.id}/home`, label: `Abrir ${nav.subject} — ${nav.title}` } : undefined };
         } finally { clearTimeout(to); }
       },
     },
