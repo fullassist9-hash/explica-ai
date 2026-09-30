@@ -1,0 +1,76 @@
+{
+  "font": {
+    "font-display": {
+      "$value": "'Fraunces','Iowan Old Style',Georgia,serif",
+      "$type": "fontFamily"
+    },
+    "font-learning": {
+      "$value": "'Lexend',system-ui,-apple-system,'Segoe UI',sans-serif",
+      "$type": "fontFamily"
+    },
+    "font-wordmark": {
+      "$value": "'Lexend' 700 (entregar em curvas)",
+      "$type": "fontFamily"
+    }
+  },
+  "type": {
+    "display-xl": {
+      "$value": "600 38px/1.02 var(--font-display)",
+      "$type": "typography"
+    },
+    "display-l": {
+      "$value": "600 31px/1.06 var(--font-display)",
+      "$type": "typography"
+    },
+    "heading-l": {
+      "$value": "600 25px/1.12 var(--font-display)",
+      "$type": "typography"
+    },
+    "heading-m": {
+      "$value": "700 19px/1.2 var(--font-learning)",
+      "$type": "typography"
+    },
+    "heading-s": {
+      "$value": "700 16px/1.25 var(--font-learning)",
+      "$type": "typography"
+    },
+    "learning": {
+      "$value": "400 var(--learn-size)/1.5 var(--font-learning)",
+      "$type": "typography"
+    },
+    "ui": {
+      "$value": "600 16px/1.25 var(--font-learning)",
+      "$type": "typography"
+    },
+    "caption": {
+      "$value": "600 12.5px/1.35 var(--font-learning)",
+      "$type": "typography"
+    },
+    "overline": {
+      "$value": "700 11.5px/1.2 var(--font-learning)",
+      "$type": "typography"
+    },
+    "data": {
+      "$value": "700 15px/1 var(--font-learning)",
+      "$type": "typography"
+    }
+  },
+  "tracking-overline": {
+    "$value": ".14em",
+    "$type": "dimension"
+  },
+  "learn-size": {
+    "beginner": {
+      "$value": "18px",
+      "$type": "dimension"
+    },
+    "standard": {
+      "$value": "17px",
+      "$type": "dimension"
+    },
+    "advanced": {
+      "$value": "16px",
+      "$type": "dimension"
+    }
+  }
+}

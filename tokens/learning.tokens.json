@@ -1,0 +1,93 @@
+{
+  "$description": "learning.tokens — cores cognitivas. Nunca usar navy/gold como categoria de conteúdo.",
+  "learn": {
+    "relevo": {
+      "$value": "#C4572B",
+      "$type": "color"
+    },
+    "relevo-bg": {
+      "$value": "#FBEAE1",
+      "$type": "color"
+    },
+    "clima": {
+      "$value": "#2872D9",
+      "$type": "color"
+    },
+    "clima-bg": {
+      "$value": "#E3EEFC",
+      "$type": "color"
+    },
+    "vegetacao": {
+      "$value": "#23935A",
+      "$type": "color"
+    },
+    "vegetacao-bg": {
+      "$value": "#E1F4E9",
+      "$type": "color"
+    },
+    "region-n": {
+      "$value": "#1FA396",
+      "$type": "color"
+    },
+    "region-ne": {
+      "$value": "#F07F2E",
+      "$type": "color"
+    },
+    "region-co": {
+      "$value": "#E8B21E",
+      "$type": "color"
+    },
+    "region-se": {
+      "$value": "#E0525E",
+      "$type": "color"
+    },
+    "region-s": {
+      "$value": "#8B5CF6",
+      "$type": "color"
+    },
+    "zm": {
+      "$value": "#E0527A",
+      "$type": "color"
+    },
+    "ag": {
+      "$value": "#D9A21C",
+      "$type": "color"
+    },
+    "st": {
+      "$value": "#E8792F",
+      "$type": "color"
+    },
+    "mn": {
+      "$value": "#3F9E4D",
+      "$type": "color"
+    },
+    "mastered": {
+      "$value": "{green-600}",
+      "$type": "color"
+    },
+    "weak": {
+      "$value": "{lumen-500}",
+      "$type": "color"
+    },
+    "new": {
+      "$value": "{ink-300}",
+      "$type": "color"
+    },
+    "map-dim": {
+      "$value": "{paper-400}",
+      "$type": "color"
+    },
+    "map-selected-stroke": {
+      "$value": "{ink-900}",
+      "$type": "color"
+    },
+    "map-correct": {
+      "$value": "{green-600}",
+      "$type": "color"
+    },
+    "map-wrong": {
+      "$value": "{red-600}",
+      "$type": "color"
+    }
+  }
+}

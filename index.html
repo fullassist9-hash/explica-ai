@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071B33">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>EXPLICA AI — Entenda qualquer assunto, do seu jeito</title>
+<meta name="description" content="EXPLICA AI transforma qualquer conteúdo em explicações simples, visuais, interativas e personalizadas.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EXPLICA AI">
+<meta property="og:title" content="EXPLICA AI — Entenda qualquer assunto, do seu jeito">
+<meta property="og:description" content="Plataforma de estudo que transforma qualquer matéria em explicações visuais, áudio, quiz e revisão — do jeito de cada aluno.">
+<meta property="og:url" content="https://fullassist9-hash.github.io/explica-ai/">
+<meta property="og:image" content="https://fullassist9-hash.github.io/explica-ai/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="apple-mobile-web-app-title" content="EXPLICA AI">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+<link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+<meta property="og:image:alt" content="EXPLICA AI — Entenda qualquer assunto, do seu jeito.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css?v=11">
+<link rel="stylesheet" href="styles.css?v=11">
+<link rel="stylesheet" href="platform.css?v=11">
+</head>
+<body data-scope="global">
+<div class="app" id="app">
+  <header class="topbar">
+    <a href="#/" class="brand" aria-label="EXPLICA AI — início"><span id="brandMark"></span><svg class="wm-svg" viewBox="0 0 96 16" width="96" height="16" aria-hidden="true" focusable="false"><text x="0" y="13.2" textLength="96" lengthAdjust="spacingAndGlyphs" style="font:700 15.5px Lexend,system-ui,sans-serif;fill:var(--color-brand-primary)">EXPLICA <tspan style="fill:var(--color-brand-accent)">AI</tspan></text></svg></a>
+    <div class="topbar-right">
+      <div class="mini-progress" id="miniProgress" aria-label="Domínio do caderno" hidden><span></span><b>0%</b></div>
+      <button class="prof-btn" id="profileBtn" aria-label="Trocar perfil"></button>
+      <button class="icon-btn" id="soundBtn" aria-label="Som ligado"></button>
+    </div>
+  </header>
+  <a class="skip" href="#view">Pular para o conteúdo</a>
+  <main id="view" tabindex="-1"></main>
+  <nav class="tabbar" id="tabbar" aria-label="Telas do caderno" hidden></nav>
+  <button class="fab" id="fab" aria-label="Perguntar ao EXPLICA AI"><span>EXPLICA</span></button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+<script src="geo.js?v=11"></script>
+<script src="core.js?v=11"></script>
+<script src="icons.js?v=11"></script>
+  <script src="globe.js?v=11"></script>
+  <script src="tutor.js?v=11"></script>
+<script src="profiles.seed.js?v=11"></script>
+<script src="pack-geo-missao-brasil.js?v=11"></script>
+<script src="app.js?v=11"></script>
+<script>if ('serviceWorker' in navigator && location.protocol === 'https:') addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script>
+</body>
+</html>

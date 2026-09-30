@@ -1,0 +1,185 @@
+{
+  "$description": "EXPLICA AI brand.tokens — imutáveis. Fonte: Brand Master v1.0.",
+  "brand": {
+    "navy": {
+      "$value": "#071B33",
+      "$type": "color"
+    },
+    "gold": {
+      "$value": "#FFC436",
+      "$type": "color"
+    },
+    "warm-white": {
+      "$value": "#F7F5EF",
+      "$type": "color"
+    },
+    "graphite": {
+      "$value": "#111820",
+      "$type": "color"
+    }
+  },
+  "primitive": {
+    "ink-950": {
+      "$value": "#030E1D",
+      "$type": "color"
+    },
+    "ink-900": {
+      "$value": "{brand.navy}",
+      "$type": "color"
+    },
+    "ink-800": {
+      "$value": "#0F2747",
+      "$type": "color"
+    },
+    "ink-700": {
+      "$value": "#22395C",
+      "$type": "color"
+    },
+    "ink-600": {
+      "$value": "#3B4D6E",
+      "$type": "color"
+    },
+    "ink-500": {
+      "$value": "#55647F",
+      "$type": "color"
+    },
+    "ink-300": {
+      "$value": "#A8B1C3",
+      "$type": "color"
+    },
+    "ink-100": {
+      "$value": "#E5E9F0",
+      "$type": "color"
+    },
+    "lumen-50": {
+      "$value": "#FFFBEF",
+      "$type": "color"
+    },
+    "lumen-100": {
+      "$value": "#FFF5DA",
+      "$type": "color"
+    },
+    "lumen-200": {
+      "$value": "#FFE4A0",
+      "$type": "color"
+    },
+    "lumen-300": {
+      "$value": "#FFD570",
+      "$type": "color"
+    },
+    "lumen-400": {
+      "$value": "{brand.gold}",
+      "$type": "color"
+    },
+    "lumen-500": {
+      "$value": "#F0AC14",
+      "$type": "color"
+    },
+    "lumen-600": {
+      "$value": "#C98B00",
+      "$type": "color"
+    },
+    "lumen-700": {
+      "$value": "#875D00",
+      "$type": "color"
+    },
+    "paper-0": {
+      "$value": "#FFFFFF",
+      "$type": "color"
+    },
+    "paper-50": {
+      "$value": "#FBFAF6",
+      "$type": "color"
+    },
+    "paper-100": {
+      "$value": "{brand.warm-white}",
+      "$type": "color"
+    },
+    "paper-200": {
+      "$value": "#EFECE3",
+      "$type": "color"
+    },
+    "paper-300": {
+      "$value": "#E4E0D5",
+      "$type": "color"
+    },
+    "paper-400": {
+      "$value": "#D2CBBC",
+      "$type": "color"
+    },
+    "green-100": {
+      "$value": "#E4F4EA",
+      "$type": "color"
+    },
+    "green-600": {
+      "$value": "#1F8A4C",
+      "$type": "color"
+    },
+    "green-800": {
+      "$value": "#17613A",
+      "$type": "color"
+    },
+    "red-100": {
+      "$value": "#FCEBEB",
+      "$type": "color"
+    },
+    "red-600": {
+      "$value": "#C53A3A",
+      "$type": "color"
+    },
+    "red-800": {
+      "$value": "#8E2323",
+      "$type": "color"
+    },
+    "blue-100": {
+      "$value": "#E6EFFC",
+      "$type": "color"
+    },
+    "blue-600": {
+      "$value": "#2463C4",
+      "$type": "color"
+    },
+    "blue-800": {
+      "$value": "#1D4F9E",
+      "$type": "color"
+    }
+  },
+  "logo": {
+    "symbol-viewbox": {
+      "$value": "115 220 280 280",
+      "$type": "other"
+    },
+    "arm-width": {
+      "$value": "76",
+      "$type": "number"
+    },
+    "arm-angle": {
+      "$value": "34deg",
+      "$type": "other"
+    },
+    "circle-diameter": {
+      "$value": "96",
+      "$type": "number"
+    },
+    "cut-width": {
+      "$value": "16",
+      "$type": "number"
+    },
+    "clear-space": {
+      "$value": "1x circle diameter",
+      "$type": "other"
+    },
+    "min-symbol": {
+      "$value": "16px",
+      "$type": "dimension"
+    },
+    "min-signature": {
+      "$value": "96px",
+      "$type": "dimension"
+    },
+    "min-with-tagline": {
+      "$value": "240px",
+      "$type": "dimension"
+    }
+  }
+}

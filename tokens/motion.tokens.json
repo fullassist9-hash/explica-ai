@@ -1,0 +1,88 @@
+{
+  "dur": {
+    "dur-instant": {
+      "$value": "100ms",
+      "$type": "duration"
+    },
+    "dur-fast": {
+      "$value": "160ms",
+      "$type": "duration"
+    },
+    "dur-base": {
+      "$value": "240ms",
+      "$type": "duration"
+    },
+    "dur-slow": {
+      "$value": "360ms",
+      "$type": "duration"
+    },
+    "dur-sheet": {
+      "$value": "420ms",
+      "$type": "duration"
+    },
+    "dur-teach": {
+      "$value": "900ms",
+      "$type": "duration"
+    }
+  },
+  "ease": {
+    "ease-standard": {
+      "$value": [
+        0.2,
+        0,
+        0,
+        1
+      ],
+      "$type": "cubicBezier"
+    },
+    "ease-enter": {
+      "$value": [
+        0.05,
+        0.7,
+        0.1,
+        1
+      ],
+      "$type": "cubicBezier"
+    },
+    "ease-exit": {
+      "$value": [
+        0.3,
+        0,
+        0.8,
+        0.15
+      ],
+      "$type": "cubicBezier"
+    },
+    "ease-success": {
+      "$value": [
+        0.34,
+        1.4,
+        0.64,
+        1
+      ],
+      "$type": "cubicBezier"
+    }
+  },
+  "pattern": {
+    "correct": {
+      "$value": "scale .96→1 ease-success dur-base",
+      "$type": "other"
+    },
+    "wrong": {
+      "$value": "translateX ±7px x2 450ms + correção visível",
+      "$type": "other"
+    },
+    "thinking": {
+      "$value": "3 dots, último gold, 1.2s loop",
+      "$type": "other"
+    },
+    "enter": {
+      "$value": "translateY 14px→0 + opacity, ease-enter dur-slow",
+      "$type": "other"
+    },
+    "reduced-motion": {
+      "$value": "todas as durações 1ms",
+      "$type": "other"
+    }
+  }
+}

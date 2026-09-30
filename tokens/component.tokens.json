@@ -1,0 +1,152 @@
+{
+  "fab": {
+    "height": {
+      "$value": "52px",
+      "$type": "dimension"
+    },
+    "radius": {
+      "$value": "{radius-pill}",
+      "$type": "dimension"
+    },
+    "bg": {
+      "$value": "{color.brand-primary}",
+      "$type": "color"
+    },
+    "icon": {
+      "$value": "symbol-negative 30px",
+      "$type": "other"
+    },
+    "elevation": {
+      "$value": "{elevation-3}",
+      "$type": "shadow"
+    }
+  },
+  "tutor-sheet": {
+    "top": {
+      "$value": "84px",
+      "$type": "dimension"
+    },
+    "radius": {
+      "$value": "{radius-xl}",
+      "$type": "dimension"
+    },
+    "scrim": {
+      "$value": "{scrim}",
+      "$type": "color"
+    },
+    "handle": {
+      "$value": "40x5px {paper-400}",
+      "$type": "other"
+    }
+  },
+  "bubble-user": {
+    "bg": {
+      "$value": "{ink-900}",
+      "$type": "color"
+    },
+    "radius": {
+      "$value": "18px 18px 4px 18px",
+      "$type": "dimension"
+    }
+  },
+  "bubble-tutor": {
+    "bg": {
+      "$value": "{paper-0}",
+      "$type": "color"
+    },
+    "radius": {
+      "$value": "18px 18px 18px 4px",
+      "$type": "dimension"
+    }
+  },
+  "source-badge": {
+    "height": {
+      "$value": "26px",
+      "$type": "dimension"
+    },
+    "radius": {
+      "$value": "{radius-pill}",
+      "$type": "dimension"
+    },
+    "material": {
+      "$value": "{color.source-material} on {color.source-material-bg}",
+      "$type": "other"
+    },
+    "extra": {
+      "$value": "{color.source-extra} on {color.source-extra-bg}",
+      "$type": "other"
+    }
+  },
+  "quiz-option": {
+    "min-height": {
+      "$value": "calc(var(--tap) + 10px)",
+      "$type": "dimension"
+    },
+    "radius": {
+      "$value": "{radius-md}",
+      "$type": "dimension"
+    },
+    "selected": {
+      "$value": "2px {ink-900}",
+      "$type": "other"
+    },
+    "correct": {
+      "$value": "{green-600} + ✓",
+      "$type": "other"
+    },
+    "wrong": {
+      "$value": "{red-600} + ✕ + shake",
+      "$type": "other"
+    }
+  },
+  "concept-card": {
+    "radius": {
+      "$value": "{radius-lg}",
+      "$type": "dimension"
+    },
+    "learn-bar": {
+      "$value": "4px learn color",
+      "$type": "other"
+    },
+    "image": {
+      "$value": "4:3",
+      "$type": "other"
+    }
+  },
+  "hotspot": {
+    "size": {
+      "$value": "44px",
+      "$type": "dimension"
+    },
+    "active": {
+      "$value": "{lumen-400} + halo 6px",
+      "$type": "other"
+    },
+    "inactive": {
+      "$value": "#FFFFFF",
+      "$type": "color"
+    }
+  },
+  "button": {
+    "primary": {
+      "$value": "{lumen-400} / {ink-900}",
+      "$type": "other"
+    },
+    "brand": {
+      "$value": "{ink-900} / #FFF + symbol",
+      "$type": "other"
+    },
+    "ghost": {
+      "$value": "{paper-0} + elevation-1",
+      "$type": "other"
+    },
+    "height": {
+      "$value": "calc(var(--tap) + 8px)",
+      "$type": "dimension"
+    },
+    "radius": {
+      "$value": "{radius-md}",
+      "$type": "dimension"
+    }
+  }
+}

@@ -1,0 +1,146 @@
+/* =====================================================================
+   EXPLICA AI DESIGN SYSTEM v1.1 — tokens.css (drop-in)
+   Substitui o tokens.css v1 do produto SEM renomear nenhuma variável.
+   Mudança: marca oficial (Navy #071B33 · Gold #FFC436 · Warm White #F7F5EF · Graphite #111820).
+   Camadas: 0) marca  1) primitivos  2) semânticos  3) aprendizagem  4) densidade
+   ===================================================================== */
+:root{
+  /* ---------- 0. MARCA (imutável — Brand Master v1.0) ---------- */
+  --brand-navy:#071B33; --brand-gold:#FFC436; --brand-warm-white:#F7F5EF; --brand-graphite:#111820;
+
+  /* ---------- 1. PRIMITIVOS ---------- */
+  --ink-950:#030E1D; --ink-900:var(--brand-navy); --ink-800:#0F2747; --ink-700:#22395C; --ink-600:#3B4D6E; --ink-500:#55647F; --ink-300:#A8B1C3; --ink-100:#E5E9F0;
+  --paper-0:#FFFFFF; --paper-50:#FBFAF6; --paper-100:var(--brand-warm-white); --paper-200:#EFECE3; --paper-300:#E4E0D5; --paper-400:#D2CBBC;
+  --lumen-50:#FFFBEF; --lumen-100:#FFF5DA; --lumen-200:#FFE4A0; --lumen-300:#FFD570; --lumen-400:var(--brand-gold); --lumen-500:#F0AC14; --lumen-600:#C98B00; --lumen-700:#875D00;
+  --green-100:#E4F4EA; --green-600:#1F8A4C; --green-800:#17613A;
+  --red-100:#FCEBEB;   --red-600:#C53A3A;   --red-800:#8E2323;
+  --blue-100:#E6EFFC;  --blue-600:#2463C4;  --blue-800:#1D4F9E;
+
+  /* ---------- 2. SEMÂNTICOS ---------- */
+  --color-brand-primary:var(--ink-900);
+  --color-brand-secondary:var(--ink-700);
+  --color-brand-accent:var(--lumen-400);
+  --color-brand-accent-strong:var(--lumen-500);
+  --color-brand-accent-text:var(--lumen-700);   /* gold legível sobre claro (5,6:1) */
+  --color-on-accent:var(--ink-900);
+  --color-on-brand:#FFFFFF;
+
+  --color-background-canvas:var(--paper-100);
+  --color-background-backdrop:var(--paper-300);
+  --color-background-surface:var(--paper-0);
+  --color-background-sunken:var(--paper-200);
+  --color-background-elevated:var(--paper-50);
+  --color-background-inverse:var(--ink-900);
+
+  --color-text-primary:var(--ink-900);
+  --color-text-secondary:var(--ink-600);
+  --color-text-muted:var(--ink-500);
+  --color-text-inverse:#FFFFFF;
+  --color-text-inverse-muted:#B9C1D3;
+
+  --color-border-subtle:var(--paper-300);
+  --color-border-strong:var(--paper-400);
+  --color-focus:var(--lumen-500);
+
+  --color-feedback-success:var(--green-600); --color-feedback-success-bg:var(--green-100); --color-feedback-success-text:var(--green-800);
+  --color-feedback-error:var(--red-600);     --color-feedback-error-bg:var(--red-100);     --color-feedback-error-text:var(--red-800);
+  --color-feedback-warning:var(--lumen-500); --color-feedback-warning-bg:var(--lumen-100); --color-feedback-warning-text:var(--lumen-700);
+  --color-feedback-info:var(--blue-600);     --color-feedback-info-bg:var(--blue-100);     --color-feedback-info-text:var(--blue-800);
+
+  --color-source-material:var(--green-800);  --color-source-material-bg:var(--green-100);
+  --color-source-extra:var(--ink-700);       --color-source-extra-bg:var(--lumen-100);
+
+  /* ---------- 3. APRENDIZAGEM (independente da marca) ---------- */
+  --learn-relevo:#C4572B;   --learn-relevo-bg:#FBEAE1;
+  --learn-clima:#2872D9;    --learn-clima-bg:#E3EEFC;
+  --learn-vegetacao:#23935A;--learn-vegetacao-bg:#E1F4E9;
+  --learn-region-n:#1FA396; --learn-region-ne:#F07F2E; --learn-region-co:#E8B21E; --learn-region-se:#E0525E; --learn-region-s:#8B5CF6;
+  --learn-zm:#E0527A; --learn-ag:#D9A21C; --learn-st:#E8792F; --learn-mn:#3F9E4D;
+  --learn-mastered:var(--green-600); --learn-weak:var(--lumen-500); --learn-new:var(--ink-300);
+
+  /* ---------- ESPAÇO / RAIO ---------- */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px; --space-16:64px;
+  --gutter:18px;
+  --radius-xs:6px; --radius-sm:10px; --radius-md:16px; --radius-lg:22px; --radius-xl:28px; --radius-pill:999px;
+
+  /* ---------- ELEVAÇÃO (tingida de navy oficial) ---------- */
+  --elevation-1:0 1px 2px rgba(7,27,51,.06),0 4px 14px rgba(7,27,51,.06);
+  --elevation-2:0 2px 4px rgba(7,27,51,.06),0 10px 28px rgba(7,27,51,.10);
+  --elevation-3:0 4px 10px rgba(7,27,51,.10),0 22px 48px rgba(7,27,51,.18);
+  --elevation-overlay:0 -12px 48px rgba(3,14,29,.24);
+  --scrim:rgba(3,14,29,.52);
+
+  /* ---------- TIPOGRAFIA (inalterada) ---------- */
+  --font-display:'Fraunces','Iowan Old Style',Georgia,serif;
+  --font-learning:'Lexend',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --type-display-xl:600 38px/1.02 var(--font-display);
+  --type-display-l:600 31px/1.06 var(--font-display);
+  --type-heading-l:600 25px/1.12 var(--font-display);
+  --type-heading-m:700 19px/1.2 var(--font-learning);
+  --type-heading-s:700 16px/1.25 var(--font-learning);
+  --type-learning:400 var(--learn-size)/1.5 var(--font-learning);
+  --type-ui:600 16px/1.25 var(--font-learning);
+  --type-caption:600 12.5px/1.35 var(--font-learning);
+  --type-overline:700 11.5px/1.2 var(--font-learning);
+  --tracking-overline:.14em;
+  --type-data:700 15px/1 var(--font-learning);
+
+  /* ---------- MOTION ---------- */
+  --dur-instant:100ms; --dur-fast:160ms; --dur-base:240ms; --dur-slow:360ms; --dur-sheet:420ms; --dur-teach:900ms;
+  --ease-standard:cubic-bezier(.2,0,0,1);
+  --ease-enter:cubic-bezier(.05,.7,.1,1);
+  --ease-exit:cubic-bezier(.3,0,.8,.15);
+  --ease-success:cubic-bezier(.34,1.4,.64,1);
+  --ease:var(--ease-enter);
+
+  /* ---------- INTERAÇÃO / DENSIDADE ---------- */
+  --tap:48px; --learn-size:17px; --gap-flow:var(--space-4);
+  --pressed-scale:.97; --disabled-opacity:.45;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+}
+[data-density="beginner"]{--tap:56px;--learn-size:18px;--gap-flow:var(--space-5)}
+[data-density="advanced"]{--tap:44px;--learn-size:16px;--gap-flow:var(--space-3)}
+[data-density="beginner"] .adv-only{display:none!important}
+[data-density="advanced"] .beg-only{display:none!important}
+
+@media (prefers-reduced-motion:reduce){
+  :root{--dur-fast:1ms;--dur-base:1ms;--dur-slow:1ms;--dur-sheet:1ms;--dur-teach:1ms}
+  *,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
+}
+:focus-visible{outline:3px solid var(--color-focus);outline-offset:2px;border-radius:6px}
+
+/* ---------- EXTENSÕES v1.1 (derivadas do handoff; sem hex novo de marca) ---------- */
+:root{
+  /* 13-learning-colors: estados de mapa */
+  --learn-map-dim:var(--paper-400); --learn-map-selected-stroke:var(--ink-900);
+  --learn-map-correct:var(--green-600); --learn-map-wrong:var(--red-600);
+  --learn-ocean:#DDEEFB; --learn-ocean-2:#CFE6F7;            /* §17 oceano */
+  /* Proveniência — 5 fontes. Sem 5 cores fortes: 2 famílias oficiais + neutros */
+  --color-source-school:var(--ink-700);  --color-source-school-bg:var(--ink-100);
+  --color-source-profile:var(--ink-700); --color-source-profile-bg:var(--paper-200);
+  --color-source-general:var(--color-source-extra); --color-source-general-bg:var(--color-source-extra-bg);
+  --color-source-fresh:var(--blue-800);  --color-source-fresh-bg:var(--blue-100);
+  /* 14-components */
+  --fab-h:52px; --sheet-top:84px; --badge-h:26px;
+  --bubble-user-radius:18px 18px 4px 18px; --bubble-tutor-radius:18px 18px 18px 4px;
+  --btn-h:calc(var(--tap) + 8px); --qopt-min:calc(var(--tap) + 10px); --hotspot:44px;
+  --measure:60ch;
+}
+
+/* ---------- 3b. APRENDIZAGEM — complementos (fundos e tons de região; mesma família da camada 3) ---------- */
+:root{
+  --learn-region-co-bg:#FFF3CF; --learn-zm-bg:#FCE3EA; --learn-st-bg:#FCE3D2;
+  --learn-region-ne-bg:#FFEBDD; --learn-region-ne-border:#F8C9A6; --learn-ne-tone-1:#F59A4F; --learn-ne-tone-2:#E86D1B;
+  --learn-ocean-text:#5E8FB8; --learn-map-empty:var(--paper-400);
+  --color-feedback-error-border:#F5C2C2; --color-feedback-warning-border:var(--lumen-200); --color-feedback-success-border:#A7E3C0;
+}
+/* ---------- 5. ILUSTRAÇÃO DIDÁTICA (desenhos vetoriais de conteúdo; nunca usados em componentes de UI) ---------- */
+:root{
+  --illu-sky-1:#EAF3FD; --illu-sky-2:#FFF8EC; --illu-sky-3:#CFE7FB; --illu-sky-4:#F4F9FE; --illu-sky-5:#FFF6E6;
+  --illu-sun:#FFD54A; --illu-sun-soft:#FFE08A; --illu-rain:#BFE0FF;
+  --illu-trunk:#6B3E1F; --illu-foliage:#2E8B57; --illu-grass-1:#8FBF5A; --illu-grass-2:#9CC76B; --illu-grass-3:#6FA23A; --illu-soil:#C8B79A;
+  --illu-water:#3E8EDE; --illu-water-soft:#6FB6F2; --illu-water-text:#1E5FB8;
+  --illu-rock-1:#D2663A; --illu-rock-2:#8E3715; --illu-barn-1:#C0392B; --illu-barn-2:#8E2A1F;
+  --illu-city-1:#5B6B8C; --illu-city-2:#3C4A66; --illu-city-3:#6B7690; --illu-city-4:#4A5878; --illu-eco-bg:#F5EFE3;
+  --illu-white:var(--paper-0); --illu-white-28:color-mix(in srgb,var(--paper-0) 28%,transparent); --illu-white-55:color-mix(in srgb,var(--paper-0) 55%,transparent); --illu-white-75:color-mix(in srgb,var(--paper-0) 75%,transparent);
+}
