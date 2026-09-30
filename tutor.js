@@ -33,7 +33,7 @@ EA.TUTOR_CHIPS = Object.entries(LABEL);
 /* Modo local (offline) — limitação TÉCNICA do modo, nunca fronteira da inteligência do EXPLICA AI.
    O Caderno é contexto, não limite: pergunta de outro assunto recebe aviso honesto de modo local (Cognitive Core §30). */
 const OFFLINE_KIND = [
-  ['sport', /\b(flamengo|neymar|arrascaeta|futebol|futsal|campeonato|gol|gols|jogador|time|libertadores|brasileirao|copa|champions)\b/],
+  ['sport', /\b(futebol|futsal|campeonato|gol|gols|jogador|jogadores|time|clube|libertadores|brasileirao|copa|champions|partida|escalacao)\b/],
   ['fresh', /\b(hoje|ontem|agora|placar|noticia|resultado|ultim[oa]s?|tabela|classificacao)\b/],
   ['game', /\b(game|games|fifa|minecraft|fortnite|roblox|videogame)\b/],
 ];
