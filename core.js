@@ -54,7 +54,7 @@ EA.profiles = {
 
 /* Persona adaptativa: derivada do perfil ativo, nunca global. */
 EA.persona = (p) => {
-  if (!p) return { band: 'adult' };
+  if (!p) return { band: 'adult', open: [''], close: '', dont: '', lens: null, ok: 'Isso! Você acertou.', err: 'Boa tentativa. Agora temos uma pista:', why: 'Em uma frase: qual raciocínio levou à resposta?' };
   const lvl = norm([p.education_level, p.grade, p.goal].join(' '));
   const g = parseInt((p.grade || '').match(/\d+/)?.[0] || '0', 10);
   let band = 'adult';
@@ -68,7 +68,15 @@ EA.persona = (p) => {
     teen:  { band, emoji: false, maxSentences: 4, open: [''], close: 'Quer testar com uma pergunta?', dont: 'Beleza, vou por outro caminho.' },
     adult: { band, emoji: false, maxSentences: 5, open: [''], close: '', dont: 'Vou reformular com outra abordagem.' },
   };
-  return styles[band];
+  const P = styles[band];
+  // Toque de Letra v2: a personalidade permanece; registro pela faixa; lente só pelo interesse DECLARADO pelo próprio perfil.
+  const ints = (p.interests || []).map(norm);
+  P.lens = ints.some(i => /futebol|futsal/.test(i)) ? 'futebol' : ints.some(i => /games|jogos/.test(i)) ? 'games' : null;
+  const slang = band === 'kid';
+  P.ok = P.lens === 'futebol' && band !== 'adult' ? (slang ? 'GOOOL! ⚽ Isso, você acertou.' : 'Golaço. Isso, você acertou.') : P.lens === 'games' && band !== 'adult' ? 'Fase concluída! Isso, você acertou.' : 'Isso! Você acertou.';
+  P.err = P.lens === 'futebol' && band !== 'adult' ? 'Boa tentativa. Vamos ver o replay da jogada:' : P.lens === 'games' && band !== 'adult' ? 'Volta do checkpoint. Olha a pista:' : 'Boa tentativa. Agora temos uma pista:';
+  P.why = band === 'adult' ? 'Em uma frase: qual raciocínio levou à resposta?' : 'Como você chegou nisso? Explica em uma frase, do seu jeito.';
+  return P;
 };
 
 /* ============ CONTENT PACK ENGINE ============ */
@@ -225,10 +233,10 @@ EA.Quiz = function Quiz(el, qs, opts = {}) {
       if (!list[i].retry) list.splice(Math.min(i + 3, list.length), 0, { q, retry: true });
     }
     EA.record(q, ok, b.dataset.o);
-    const fb = $('.q-fb', el);
+    const fb = $('.q-fb', el), P = EA.persona(EA.profiles.active());
     fb.innerHTML = ok
-      ? `<div class="remind good"><div class="h">${OK} ${list[i].retry ? 'Agora foi! Você lembrou.' : 'Isso! Você acertou.'}</div><ul><li>${q.r[0]}</li></ul></div>`
-      : `<div class="remind fix"><p class="fix-h">${NO}<span>Quase! Sua resposta: <b>${esc(b.dataset.o)}</b></span></p>
+      ? `<div class="remind good"><div class="h">${OK} ${list[i].retry ? 'Agora foi! Você lembrou.' : P.ok}</div><ul><li>${q.r[0]}</li></ul>${answers.filter(a => a.ok).length % 3 === 1 ? `<p class="muted" style="margin-top:6px">💭 ${P.why}</p>` : ''}</div>`
+      : `<div class="remind fix"><p class="fix-h">${NO}<span>${P.err} sua resposta foi <b>${esc(b.dataset.o)}</b></span></p>
          <div class="h">${OK} Correta: ${esc(q.o[0])}</div>
          <p class="lembre">Lembre</p><ul>${q.r.map(x => `<li>${x}</li>`).join('')}</ul>
          <p class="retest"><i aria-hidden="true"></i>Essa pergunta volta daqui a pouco para você tentar de novo.</p>

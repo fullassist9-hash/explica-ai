@@ -57,6 +57,7 @@ EA.closeSheet = closeSheet;
 
 /* ---------- perfis ---------- */
 const LEVELS = ['Ensino Fundamental', 'Ensino Médio', 'Faculdade', 'Pós-graduação', 'Curso técnico', 'Nenhum / não se aplica'];
+const INTERESTS = ['Futebol/futsal', 'Games', 'Música', 'Leitura', 'Idiomas', 'Educação financeira', 'Ciência e tecnologia', 'Esporte', 'Desenho e criatividade', 'Culinária e nutrição', 'Cinema e séries', 'Natureza e animais'];
 const GOALS = ['Prova escolar', 'Faculdade', 'Concurso', 'Curso', 'Trabalho', 'Aprendizado pessoal', 'Outro'];
 function profileSheet() {
   const act = EA.profiles.active();
@@ -80,11 +81,14 @@ function newProfileSheet(ed) {
       <label>Nível de ensino <small>opcional</small><select name="education_level"><option value="">—</option>${LEVELS.map(l => `<option>${l}</option>`).join('')}</select></label>
       <label>Escola <small>opcional · fica só neste aparelho</small><input name="school" maxlength="60"></label>
       <label>Cidade <small>opcional · fica só neste aparelho</small><input name="location" maxlength="60"></label>
+      <fieldset class="ints" style="border:0;padding:0;margin:0"><legend style="font-weight:600;margin-bottom:6px">Do que você curte? <small class="muted">opcional · o EXPLICA usa nos exemplos · fica só neste aparelho</small></legend>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">${INTERESTS.map(t => `<label class="pin" style="display:inline-flex;align-items:center;gap:6px;min-height:44px;cursor:pointer"><input type="checkbox" name="interests" value="${t}" style="width:20px;height:20px"> ${t}</label>`).join('')}</div></fieldset>
       <label>Objetivo<select name="goal">${GOALS.map(g => `<option>${g}</option>`).join('')}</select></label>
       <button class="btn btn-brand" type="submit">${ed ? 'Salvar' : 'Criar perfil'}</button></form>`);
   if (ed) for (const [k, v] of Object.entries(ed)) { const i = $(`[name="${k}"]`, s); if (i && v != null) i.value = v; }
+  if (ed && Array.isArray(ed.interests)) $$('[name="interests"]', s).forEach(c => { c.checked = ed.interests.includes(c.value); });
   $('#pf', s).onsubmit = (e) => {
-    e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
+    e.preventDefault(); const fd = new FormData(e.target), f = Object.fromEntries(fd); f.interests = fd.getAll('interests');
     if (f.education_level === 'Nenhum / não se aplica') f.education_level = null;
     const data = { ...f, age: f.age ? +f.age : null };
     for (const k of ['grade', 'school', 'location', 'education_level']) if (!data[k]) data[k] = null;
