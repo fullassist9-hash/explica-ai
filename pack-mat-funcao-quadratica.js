@@ -40,8 +40,8 @@ function plot(a, b, c, o = {}) {
     <path d="${d}" fill="none" stroke="var(--color-brand-primary, #0B5FFF)" stroke-width="3" stroke-linecap="round" clip-path="url(#clp${W}${H})"/>
     ${o.roots !== false ? rs.map(r => `<circle cx="${X(r)}" cy="${Y(0)}" r="5" fill="#fff" stroke="#374151" stroke-width="2"/><text x="${X(r) - 6}" y="${Y(0) + 16}" font-size="11" fill="#374151">${fmt(r)}</text>`).join('') : ''}
     ${o.c !== false && x0 < 0 && x1 > 0 ? `<circle cx="${X(0)}" cy="${Y(c)}" r="4.5" fill="#6B7280"/><text x="${X(0) + 6}" y="${Y(c) - 6}" font-size="11" fill="#374151">(0, ${fmt(c)})</text>` : ''}
-    <circle cx="${X(xv)}" cy="${Y(yv)}" r="7" fill="${col}" stroke="#fff" stroke-width="2"/>
-    <text x="${Math.min(W - 120, X(xv) + 10)}" y="${a > 0 ? Y(yv) + 18 : Y(yv) - 10}" font-size="12.5" font-weight="700" fill="${col}">V(${fmt(xv)}, ${fmt(yv)}) · ${ext}</text>
+    ${o.vertex !== false ? `<circle cx="${X(xv)}" cy="${Y(yv)}" r="7" fill="${col}" stroke="#fff" stroke-width="2"/>` : ''}
+    ${o.vertex !== false && o.label !== false ? `<text x="${Math.min(W - 120, X(xv) + 10)}" y="${a > 0 ? Y(yv) + 18 : Y(yv) - 10}" font-size="12.5" font-weight="700" fill="${col}">V(${fmt(xv)}, ${fmt(yv)}) · ${ext}</text>` : ''}
   </svg>`;
 }
 
@@ -54,12 +54,13 @@ const ERR = {
   XV_YV_INTERPRETATION: { n: 'x_v × y_v', t: 'Respondeu x_v quando pediram y_v (ou o contrário).', fix: 'x_v responde ONDE / QUANDO / QUANTOS. y_v responde QUAL É o valor máximo ou mínimo.' },
   ROOT_VS_VERTEX_CONFUSION: { n: 'Raiz × vértice', t: 'Usou raiz no lugar do vértice.', fix: 'Raiz = onde a parábola corta o eixo x (y = 0). Vértice = ponto mais baixo (mínimo) ou mais alto (máximo).' },
   CANONICAL_FORM_SIGN_ERROR: { n: 'Forma canônica', t: 'Inverteu o sinal dentro do parêntese.', fix: 'Em a(x − h)² + k o vértice é (h, k). Atenção: (x + 4) = (x − (−4)) → h = −4.' },
+  OPERATION_ORDER: { n: 'Potência antes', t: 'No y_v, multiplicou antes de elevar ao quadrado (ou perdeu o sinal do quadrado).', fix: 'Primeiro a potência, depois a multiplicação: −2·(3)² = −2·9 = −18 (não 36). E (−3)² = +9.' },
 };
 
 /* ---------------- conteúdo ---------------- */
 const TOPICS = {
   par:   { name: 'Parábola e função quadrática', sub: '01–05 · parábola, eixo, a·b·c, concavidade', ico: '〰️', c: 'var(--learn-clima)', bg: 'var(--learn-clima-bg)', route: 'parabola', acts: [] },
-  vert:  { name: 'Vértice: máximo e mínimo', sub: '06 · 09–12 · prioridade da prova', ico: '🎯', c: 'var(--learn-region-co)', bg: 'var(--learn-region-co-bg)', route: 'vertice', acts: [] },
+  vert:  { name: 'Vértice: máximo e mínimo', sub: '06 · 09–12 · prioridade da prova', ico: '🎯', c: 'var(--learn-region-co)', bg: 'var(--learn-region-co-bg)', route: 'vertice', acts: ['act_aula'] },
   graf:  { name: 'Gráfico e pontos notáveis', sub: '07 · 08 · 13 · 14 · raízes × vértice', ico: '📈', c: 'var(--learn-vegetacao)', bg: 'var(--learn-vegetacao-bg)', route: 'grafico', acts: ['act_graf'] },
   prob:  { name: 'Situações-problema', sub: '15 · quando × quanto', ico: '🧩', c: 'var(--learn-relevo)', bg: 'var(--learn-relevo-bg)', route: 'problemas', acts: [] },
   treino:{ name: 'Treino do vértice', sub: '16 · seus erros viram treino', ico: '🏋️', c: 'var(--learn-zm)', bg: 'var(--learn-zm-bg)', route: 'treino', acts: ['act_tr1', 'act_tr2', 'act_tr3', 'act_canon', 'act_coef'] },
@@ -299,8 +300,10 @@ V.home = (el) => {
     </section>
     <div class="mastery"><div class="ring" style="--p:${m.all}"><div>${m.all}%</div></div>
       <p><strong>Domínio geral</strong>Cada acerto e cada treino enchem o círculo.</p></div>
+    ${card(`<p class="eyebrow">Prova amanhã? Hoje à noite (~60 min)</p><ol class="mq-steps"><li><a href="${R}aula"><b>Aula guiada</b></a> · 20 min</li><li><a href="${R}treino">Treino médio</a> · 15 min</li><li><a href="${R}diagnostico">Diagnóstico</a> ou <a href="${R}simulado">Simulado</a> · 15 min</li><li><a href="${R}revisao">Revisar só o que errou</a> · 10 min</li></ol><p class="muted">Amanhã cedo: só o <a href="${R}plano">cartão de memória</a> (5 min). Nada de matéria nova. Dormir bem fixa o que você estudou.</p>`, 'margin:14px 0')}
     <div class="cta-grid">
-      <a class="btn btn-primary" href="${R}vertice">${EA.icon('target', 20)} Começar pelo vértice</a>
+      <a class="btn btn-primary" href="${R}aula">${EA.icon('play', 20)} Aula guiada do vértice · comece aqui</a>
+      <a class="btn btn-ghost" href="${R}vertice">${EA.icon('target', 20)} Teoria do vértice</a>
       <div class="btn-row">
         <a class="btn btn-ghost" href="${R}revisao"><i>${EA.icon('review', 24)}</i>Revisão inteligente</a>
         <a class="btn btn-ghost" href="${R}simulado"><i>${EA.icon('quiz', 24)}</i>Simulado</a>
@@ -462,7 +465,9 @@ V.treino = (el) => {
       }
       if (y == null) issues.push(err('VERTEX_INCOMPLETE'));
       else if (isNaN(y) || !near(y, k0)) {
+        const wrongPow = (a * h0) * (a * h0) + b * h0 + c, negSq = a * -(h0 * h0) + b * h0 + c;
         if (near(y, h0) && h0 !== k0) issues.push(err('XV_YV_INTERPRETATION'));
+        else if ((near(y, wrongPow) || near(y, negSq)) && !near(wrongPow, k0)) issues.push(err('OPERATION_ORDER'));
         else issues.push({ n: 'y_v', fix: `Substitua x_v na função: y_v = ${fname}(x_v). Cuidado com (−n)² = +n².` });
       }
       const real = issues.filter(Boolean);
@@ -500,6 +505,145 @@ V.treino = (el) => {
   $$('[data-l]', el).forEach(btn => btn.onclick = () => { level = btn.dataset.l; $$('[data-l]', el).forEach(x => x.classList.toggle('on', x === btn)); fx.tap(); next(); });
   const lq = new URLSearchParams(location.hash.split('?')[1] || '').get('l'); if (lq && streak[lq] != null) { level = lq; $$('[data-l]', el).forEach(x => x.classList.toggle('on', x.dataset.l === lq)); }
   paintErrs(); next(); scrollTo();
+};
+
+/* AULA GUIADA (~20 min) — desenho baseado em evidência:
+   exemplos resolvidos com "fading" (passos somem até ela resolver sozinha) · gráfico e conta juntos (dupla representação) ·
+   uma ideia por tela · feedback imediato · "ache o erro" só depois dos exemplos corretos · mistura final (interleaving). */
+V.aula = (el) => {
+  EA.ctx.reset({ screen: 'aula', title: 'Aula guiada do vértice', concept: 'vertice' });
+  el.append(h(`<div>${STYLE}<p class="eyebrow">Aula guiada · ~20 min · comece aqui</p><h1 class="screen-title">Vértice em 7 passos</h1>
+    <div class="q-bar" style="margin:8px 0 14px"><i class="mq-pg" style="width:0%"></i></div><div class="mq-stage"></div></div>`));
+  const box = $('.mq-stage', el), pg = $('.mq-pg', el), S = ST();
+  let i = 0;
+  const stages = [ver, ex1, ex2, ex3, sozinha, acheErro, mistura];
+  const nextBtn = (label = 'Continuar →') => `<button class="btn btn-primary mq-next" style="margin-top:14px">${label}</button>`;
+  const bindNext = () => { const b = $('.mq-next', box); if (b) b.onclick = () => { fx.tap(); i++; go(); }; };
+  function go() { pg.style.width = `${Math.round(i / stages.length * 100)}%`; box.innerHTML = ''; window.scrollTo(0, 0); stages[i](); }
+  const head = (n, t, sub) => `<p class="eyebrow">Passo ${n} de 7</p><h2 style="margin:2px 0 6px">${t}</h2>${sub ? `<p class="lead">${sub}</p>` : ''}`;
+  const mark = (code) => { if (!code) return; S.errtypes = S.errtypes || {}; S.errtypes[code] = (S.errtypes[code] || 0) + 1; EA.save(); };
+
+  // 1 · VER — antes da fórmula: o desenho já diz máximo ou mínimo
+  function ver() {
+    const P = shuffle([[1, -2, -1], [-1, 2, 3], [2, 4, 1], [-0.5, 1, 2]]); let done = 0;
+    box.innerHTML = `${head(1, 'Olhe o desenho', 'Sem fazer conta: o ponto especial (o vértice) é o mais alto ou o mais baixo?')}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${P.map((p, k) => `<div class="mq-card" data-k="${k}">${plot(p[0], p[1], p[2], { w: 200, h: 170, vertex: false, axis: false, roots: false, c: false })}
+        <p style="margin:6px 0;font-size:14px;text-align:center">a = ${fmt(p[0])}</p><div class="mq-row" style="justify-content:center"><button class="btn btn-ghost sm" data-v="max">∩ máx</button><button class="btn btn-ghost sm" data-v="min">U mín</button></div><p class="mq-r" style="font-size:13px;text-align:center;min-height:18px"></p></div>`).join('')}</div>
+      <div class="mq-after"></div>`;
+    $$('.mq-card', box).forEach(cd => $$('[data-v]', cd).forEach(b => b.onclick = () => {
+      const p = P[+cd.dataset.k], want = p[0] > 0 ? 'min' : 'max', ok = b.dataset.v === want;
+      if (cd.dataset.done) return; cd.dataset.done = 1; done++;
+      fx[ok ? 'ok' : 'err'](); if (!ok) mark('CONCAVITY_EXTREME_CONFUSION');
+      $('.mq-r', cd).innerHTML = ok ? '✓ Isso!' : `✗ a ${p[0] > 0 ? '> 0 → U → mínimo' : '< 0 → ∩ → máximo'}`;
+      cd.innerHTML = cd.innerHTML.replace(/<svg[\s\S]*<\/svg>/, plot(p[0], p[1], p[2], { w: 200, h: 170, roots: false, c: false, label: false }));
+      if (done === P.length) { $('.mq-after', box).innerHTML = `<div class="callout" style="display:block;margin-top:12px"><p class="mq-big">a &gt; 0 → U → MÍNIMO · a &lt; 0 → ∩ → MÁXIMO</p><p>Só o sinal de <b>a</b> decide. Guarde: <b>U = vale (mínimo)</b>, <b>∩ = morro (máximo)</b>.</p></div>${nextBtn()}`; bindNext(); }
+    }));
+  }
+  // 2 · EXEMPLO RESOLVIDO (livro, p. 259) — um passo por vez, gráfico acompanha
+  function ex1() {
+    const steps = [
+      ['Arrume: a = 1, b = <b>−6</b>, c = 5', 'O sinal vai junto com o número.', { vertex: false, axis: false, roots: false, c: false }],
+      ['a = 1 &gt; 0 → <b>U</b> → o vértice é <b>MÍNIMO</b>', 'Decidi antes de calcular.', { vertex: false, axis: false, roots: false, c: false }],
+      ['x_v = −b/(2a) = −(<b>−6</b>)/(2·1) = 6/2 = <b>3</b>', 'Menos com menos dá mais. O eixo (tracejado) está em x = 3.', { vertex: false, roots: false, c: false }],
+      ['y_v = f(3) = 3² − 6·3 + 5 = 9 − 18 + 5 = <b>−4</b>', 'Primeiro a potência (3² = 9), depois o resto.', { roots: false, c: false, label: false }],
+      ['<b>V = (3, −4)</b> → o mínimo é −4, quando x = 3', '📘 Igual ao livro, p. 259.', { roots: false, c: false }],
+    ];
+    let k = 0;
+    const draw = () => {
+      box.innerHTML = `${head(2, 'Exemplo resolvido: f(x) = x² − 6x + 5', 'Leia cada passo. O gráfico vai mostrando o que a conta descobre.')}${SRC_BOOK('p. 259')}
+        ${plot(1, -6, 5, { w: 320, h: 220, ...steps[k][2] })}
+        <ol class="mq-steps">${steps.slice(0, k + 1).map((s, j) => `<li style="${j === k ? 'font-weight:600' : 'opacity:.75'}">${s[0]}<br><small class="muted">${s[1]}</small></li>`).join('')}</ol>
+        ${k < steps.length - 1 ? `<button class="btn btn-dark mq-step" style="margin-top:10px">Próximo passo (${k + 2}/${steps.length})</button>` : nextBtn('Agora você completa um →')}`;
+      const b = $('.mq-step', box); if (b) b.onclick = () => { fx.tap(); k++; draw(); }; else bindNext();
+    };
+    draw();
+  }
+  // 3 · EXEMPLO COM O ÚLTIMO PASSO EM BRANCO (fading)
+  function ex2() {
+    box.innerHTML = `${head(3, 'Complete o último passo: g(x) = −2x² + 8x + 3', 'Eu fiz quase tudo. Você termina.')}
+      <ol class="mq-steps"><li>a = −2, b = 8, c = 3</li><li>a = −2 &lt; 0 → ∩ → <b>MÁXIMO</b></li><li>x_v = −8/(2·(−2)) = −8/(−4) = <b>2</b></li>
+      <li>y_v = g(2) = −2·(2)² + 8·2 + 3 = <input class="mq-in" data-i="y" inputmode="decimal" aria-label="y do vértice"> <button class="btn btn-brand sm" data-go>Conferir</button></li></ol>
+      <p class="muted">Dica: primeiro (2)² = 4; depois −2·4.</p><div class="mq-fb"></div>`;
+    $('[data-go]', box).onclick = () => {
+      const y = parse($('[data-i=y]', box).value);
+      if (near(y, 11)) { fx.ok(); $('.mq-fb', box).innerHTML = `<div class="remind good"><div class="h">Isso! −8 + 16 + 3 = 11.</div><p>V = (2, 11): o <b>máximo é 11</b>, quando x = 2.</p></div>${plot(-2, 8, 3, { w: 320, h: 210, roots: false })}${nextBtn()}`; bindNext(); }
+      else { fx.err(); const code = near(y, 35) || near(y, 27) ? 'OPERATION_ORDER' : near(y, 2) ? 'XV_YV_INTERPRETATION' : null; mark(code); $('.mq-fb', box).innerHTML = `<div class="remind fix"><p>${code ? `<b>${ERR[code].n}:</b> ${ERR[code].fix}` : 'Quase.'}</p><p>−2·(2)² = −2·4 = −8 · 8·2 = 16 · −8 + 16 + 3 = ?</p></div>`; }
+    };
+  }
+  // 4 · EXEMPLO COM DOIS PASSOS EM BRANCO
+  function ex3() {
+    box.innerHTML = `${head(4, 'Agora dois passos: f(x) = x² − 4x + 7', 'a = 1, b = −4, c = 7.')}
+      <p><b>1.</b> Máximo ou mínimo? <button class="btn btn-ghost sm" data-mm="max">∩ máximo</button> <button class="btn btn-ghost sm" data-mm="min">U mínimo</button></p>
+      <p style="margin-top:10px"><b>2.</b> x_v = −(−4)/(2·1) = <input class="mq-in" data-i="x" inputmode="decimal" aria-label="x do vértice"></p>
+      <p style="margin-top:10px"><b>3.</b> y_v = f(x_v) = <input class="mq-in" data-i="y" inputmode="decimal" aria-label="y do vértice"></p>
+      <button class="btn btn-brand sm" style="margin-top:10px" data-go>Conferir</button><div class="mq-fb"></div>`;
+    let mm = null; $$('[data-mm]', box).forEach(b => b.onclick = () => { mm = b.dataset.mm; $$('[data-mm]', box).forEach(x => x.classList.toggle('btn-primary', x === b)); fx.tap(); });
+    $('[data-go]', box).onclick = () => {
+      const x = parse($('[data-i=x]', box).value), y = parse($('[data-i=y]', box).value), out = [];
+      if (mm !== 'min') { out.push(ERR.CONCAVITY_EXTREME_CONFUSION.fix); mark('CONCAVITY_EXTREME_CONFUSION'); }
+      if (!near(x, 2)) { const c = near(x, -2) ? 'SIGN_ERROR_XV' : null; mark(c); out.push(c ? ERR[c].fix : 'x_v = −(−4)/2 = 4/2 = 2.'); }
+      if (!near(y, 3)) { const c = y == null ? 'VERTEX_INCOMPLETE' : near(y, 2) ? 'XV_YV_INTERPRETATION' : null; mark(c); out.push(c ? ERR[c].fix : 'f(2) = 4 − 8 + 7 = 3.'); }
+      if (!out.length) { fx.ok(); $('.mq-fb', box).innerHTML = `<div class="remind good"><div class="h">Perfeito: V = (2, 3), mínimo 3.</div></div>${plot(1, -4, 7, { w: 320, h: 210, roots: false })}${nextBtn('Agora sozinha →')}`; bindNext(); }
+      else { fx.err(); $('.mq-fb', box).innerHTML = `<div class="remind fix"><ul>${out.map(o => `<li>${o}</li>`).join('')}</ul><p>Corrija e confira de novo.</p></div>`; }
+    };
+  }
+  // 5 · SOZINHA (sem andaime) — função nova a cada tentativa
+  function sozinha() {
+    const a = [1, -1, 2, -2][Math.floor(Math.random() * 4)], h0 = Math.floor(Math.random() * 9) - 4, k0 = Math.floor(Math.random() * 13) - 6;
+    const b = -2 * a * h0, c = a * h0 * h0 + k0;
+    box.innerHTML = `${head(5, 'Sozinha: f(x) = ' + poly(a, b, c), 'Os 6 passos: arrumar · sinal de a · x_v · y_v · V · frase.')}
+      <p><button class="btn btn-ghost sm" data-mm="max">∩ máximo</button> <button class="btn btn-ghost sm" data-mm="min">U mínimo</button></p>
+      <p style="margin-top:10px">V = (<input class="mq-in" data-i="x" inputmode="decimal" aria-label="x do vértice">, <input class="mq-in" data-i="y" inputmode="decimal" aria-label="y do vértice">)</p>
+      <button class="btn btn-brand sm" style="margin-top:10px" data-go>Conferir</button><div class="mq-fb"></div>`;
+    let mm = null; $$('[data-mm]', box).forEach(btn => btn.onclick = () => { mm = btn.dataset.mm; $$('[data-mm]', box).forEach(x => x.classList.toggle('btn-primary', x === btn)); fx.tap(); });
+    $('[data-go]', box).onclick = () => {
+      const x = parse($('[data-i=x]', box).value), y = parse($('[data-i=y]', box).value), want = a > 0 ? 'min' : 'max';
+      const ok = mm === want && near(x, h0) && near(y, k0);
+      const res = `<ul><li>a = ${fmt(a)} → ${want === 'min' ? 'U → mínimo' : '∩ → máximo'}</li><li>x_v = −(${fmt(b)})/(2·${fmt(a)}) = ${fmt(h0)}</li><li>y_v = f(${fmt(h0)}) = ${fmt(k0)}</li><li><b>V = (${fmt(h0)}, ${fmt(k0)})</b></li></ul>`;
+      if (ok) { fx.ok(); $('.mq-fb', box).innerHTML = `<div class="remind good"><div class="h">Sozinha e certo! 🎯</div>${res}</div>${nextBtn()}`; bindNext(); }
+      else {
+        fx.err(); if (mm !== want) mark('CONCAVITY_EXTREME_CONFUSION'); if (x != null && near(x, -h0) && h0) mark('SIGN_ERROR_XV');
+        $('.mq-fb', box).innerHTML = `<div class="remind fix"><p class="lembre">Resolução</p>${res}</div><button class="btn btn-dark mq-again" style="margin-top:10px">Tentar outra parecida</button>`;
+        $('.mq-again', box).onclick = () => { fx.tap(); sozinha(); };
+      }
+    };
+  }
+  // 6 · ACHE O ERRO (depois dos exemplos corretos)
+  function acheErro() {
+    const items = shuffle([
+      { s: 'f(x) = x² − 8x + 12<br>x_v = −8/(2·1) = −4', ans: 'SIGN_ERROR_XV', fix: 'b = −8, então x_v = −(−8)/2 = +4.' },
+      { s: 'g(x) = −2x² + 12x<br>x_v = 3 · y_v = (−2·3)² + 12·3 = 36 + 36 = 72', ans: 'OPERATION_ORDER', fix: 'Primeiro 3² = 9; depois −2·9 = −18. y_v = −18 + 36 = 18.' },
+      { s: 'Raízes de x² − 6x + 5: 1 e 5.<br>“Então o vértice é (1, 5).”', ans: 'ROOT_VS_VERTEX_CONFUSION', fix: 'Raízes não são o vértice. x_v = (1 + 5)/2 = 3 → V = (3, −4).' },
+    ]);
+    const opts = ['SIGN_ERROR_XV', 'OPERATION_ORDER', 'ROOT_VS_VERTEX_CONFUSION', 'CONCAVITY_EXTREME_CONFUSION'];
+    let j = 0;
+    const draw = () => {
+      const it = items[j];
+      box.innerHTML = `${head(6, 'Ache o erro', `Erro ${j + 1} de ${items.length}. Qual foi o erro desta resolução?`)}<div class="callout" style="display:block;background:var(--color-feedback-error-bg);border-color:var(--color-feedback-error-border)"><p>${it.s}</p></div>
+        <div style="display:grid;gap:8px;margin-top:10px">${opts.map(o => `<button class="q-opt" data-o="${o}"><span class="l">•</span>${ERR[o].n}: ${ERR[o].t}</button>`).join('')}</div><div class="mq-fb"></div>`;
+      $$('[data-o]', box).forEach(b => b.onclick = () => {
+        const ok = b.dataset.o === it.ans; fx[ok ? 'ok' : 'err'](); $$('[data-o]', box).forEach(x => { x.disabled = true; if (x.dataset.o === it.ans) x.classList.add('right'); });
+        if (!ok) b.classList.add('wrong');
+        $('.mq-fb', box).innerHTML = `<div class="remind ${ok ? 'good' : 'fix'}"><p>${ok ? '✓ Isso. ' : ''}${it.fix}</p></div>${j < items.length - 1 ? '<button class="btn btn-dark mq-n2" style="margin-top:10px">Próximo erro →</button>' : nextBtn('Mistura final →')}`;
+        const n2 = $('.mq-n2', box); if (n2) n2.onclick = () => { fx.tap(); j++; draw(); }; else bindNext();
+      });
+    };
+    draw();
+  }
+  // 7 · MISTURA FINAL (um tipo diferente de questão por vez)
+  function mistura() {
+    box.innerHTML = `${head(7, 'Mistura final', 'Cada questão é de um tipo diferente — igual na prova.')}<div class="quiz"></div><div class="mq-end"></div>`;
+    const types = [CONC, SIGN, XY, ROOT, CAN, INC];
+    const qs = shuffle(types.map(t => shuffle(Q.filter(q => q.k === t && !S.correct[q.id]).concat(Q.filter(q => q.k === t)))[0]).filter(Boolean));
+    EA.Quiz($('.quiz', box), qs, { label: 'Mistura', onDone: (ok, tot) => {
+      pg.style.width = '100%'; EA.act('act_aula', '🎓 Aula guiada concluída!');
+      $('.mq-end', box).innerHTML = `<div class="callout" style="display:block;margin-top:12px"><p class="mq-big">${ok}/${tot}</p>
+        <p>${ok >= tot - 1 ? 'Você está pronta para o vértice. Agora faça o simulado.' : 'Bom treino. Agora refaça só o que errou e depois o simulado.'}</p>
+        <p class="muted">Antes de dormir: explique em voz alta, sem olhar, como achar o vértice de x² − 6x + 5. Dormir bem ajuda a memória a fixar.</p>
+        <div style="display:grid;gap:8px;margin-top:10px"><a class="btn btn-primary" href="${R}revisao">Revisar só o que errei</a><a class="btn btn-ghost" href="${R}simulado">Fazer o simulado</a></div></div>`;
+    } });
+  }
+  go();
 };
 
 /* Plano personalizado da Lulu (complemento autoral, alinhado ao livro pp. 253–259). */
