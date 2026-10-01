@@ -141,25 +141,45 @@ EA.fx = {
   err: () => tone([240, 200], .16, 'triangle', .06, .1),
   done: () => tone([523, 659, 784, 1047, 1319], .22, 'sine', .07, .09),
 };
+/* Voz: escolhe a mais humana do aparelho (neural/natural/aprimorada > Google > nomes conhecidos > compacta).
+   A pessoa pode trocar em "Voz do app" (EA.voiceList / EA.settings.voiceName). */
 let voice = null;
+const voiceScore = (v) => (/natural|neural|online|premium|enhanced|aprimorad|melhorad/i.test(v.name + ' ' + v.voiceURI) ? 50 : 0) + (/google/i.test(v.name) ? 30 : 0)
+  + (/francisca|thalita|luciana|camila|vitoria|vitória|antonio|daniel/i.test(v.name) ? 10 : 0) - (/compact|espeak|maria\b/i.test(v.name + ' ' + v.voiceURI) ? 25 : 0) + (v.localService === false ? 5 : 0) + (/pt[-_]BR/i.test(v.lang) ? 3 : 0);
+EA.voiceList = () => ('speechSynthesis' in window ? speechSynthesis.getVoices() : []).filter(v => /^pt/i.test(v.lang)).sort((a, b) => voiceScore(b) - voiceScore(a));
 function pickVoice() {
   if (!('speechSynthesis' in window)) return;
-  const vs = speechSynthesis.getVoices().filter(v => /pt[-_]BR/i.test(v.lang));
-  const pref = [/Francisca/i, /Luciana/i, /Google/i, /Natural/i, /Thalita/i];
-  voice = pref.map(p => vs.find(v => p.test(v.name))).find(Boolean) || vs[0] || null;
+  const vs = EA.voiceList();
+  voice = vs.find(v => v.name === EA.settings.voiceName) || vs[0] || null;
 }
-if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+EA.setVoice = (name) => { EA.settings.voiceName = name; EA.saveSettings(); pickVoice(); };
+if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.addEventListener ? speechSynthesis.addEventListener('voiceschanged', pickVoice) : (speechSynthesis.onvoiceschanged = pickVoice); }
 let speakingBtn = null;
-const clean = (t) => String(t).replace(/<[^>]+>/g, ' ').replace(/[^\p{L}\p{N}\s.,:;!?+=→()-]/gu, ' ').replace(/→/g, ', ').replace(/\+/g, ' e ').replace(/\s+/g, ' ');
+/* Matemática falada: “x_v = −b/(2a)” → “xis vê igual a menos b sobre 2 a”. */
+const speakMath = (t) => String(t)
+  .replace(/<[^>]+>/g, ' ').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&nbsp;/g, ' ').replace(/&amp;/g, ' e ')
+  .replace(/\bx_v\b/g, 'xis vê').replace(/\by_v\b/g, 'ípsilon vê').replace(/\bt_v\b/g, 'tê vê').replace(/x₁/g, 'xis um').replace(/x₂/g, 'xis dois')
+  .replace(/([A-Za-z0-9)])²/g, '$1 ao quadrado').replace(/([A-Za-z0-9)])³/g, '$1 ao cubo')
+  .replace(/\b([a-zA-Z])\(([\p{L}\d ]{1,8})\)/gu, '$1 de $2')
+  .replace(/[−–]/g, ' menos ').replace(/(^|[\s(=,])-(?=\s?[\dA-Za-zΔ(])/g, '$1 menos ')
+  .replace(/Δ/g, ' delta ').replace(/≠/g, ' diferente de ').replace(/≥/g, ' maior ou igual a ').replace(/≤/g, ' menor ou igual a ')
+  .replace(/>/g, ' maior que ').replace(/</g, ' menor que ').replace(/±/g, ' mais ou menos ').replace(/√/g, ' raiz de ').replace(/∩/g, ' montanha ')
+  .replace(/(\d)\s*·\s*(?=[\d(a-zA-Z])/g, '$1 vezes ').replace(/·/g, ', ').replace(/\s\/\s|\//g, ' sobre ').replace(/=/g, ' igual a ').replace(/\+/g, ' mais ')
+  .replace(/(\d)([a-zA-Z])/g, '$1 $2').replace(/\bx\b/g, 'xis').replace(/\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ]{3,}\b/g, w => w.toLowerCase()).replace(/→/g, ', ').replace(/×/g, ' ou ')
+  .replace(/[^\p{L}\p{N}\s.,:;!?()]/gu, ' ').replace(/[()]/g, ' ').replace(/\s+([.,:;!?])/g, '$1').replace(/\s+/g, ' ').trim();
+EA.speakMath = speakMath;
 EA.say = (text, btn) => {
   if (!EA.settings.sound || !('speechSynthesis' in window) || !text) return;
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(clean(text));
-  u.lang = 'pt-BR'; if (voice) u.voice = voice; u.rate = .95; u.pitch = 1.05;
+  if (!voice) pickVoice();
   if (speakingBtn) speakingBtn.classList.remove('speaking');
   if (btn) { speakingBtn = btn; btn.classList.add('speaking'); }
-  u.onend = u.onerror = () => btn && btn.classList.remove('speaking');
-  speechSynthesis.speak(u);
+  // frases curtas em fila: evita o corte de ~15 s do Chrome Android e deixa a entonação natural
+  const parts = speakMath(text).match(/[^.!?;:]+[.!?;:]?/g) || [];
+  parts.forEach((p, k) => { const u = new SpeechSynthesisUtterance(p.trim()); u.lang = voice ? voice.lang : 'pt-BR'; if (voice) u.voice = voice;
+    u.rate = EA.settings.voiceRate || 1.05; u.pitch = 1;
+    if (k === parts.length - 1) u.onend = u.onerror = () => btn && btn.classList.remove('speaking');
+    speechSynthesis.speak(u); });
 };
 EA.sayBtn = (text, cls = '') => `<button class="say ${cls}" data-say="${esc(text)}" aria-label="Ouvir">${EA.icon ? EA.icon('soundOn', 20) : '🔊'}</button>`;
 document.addEventListener('click', (e) => { const b = e.target.closest('[data-say]'); if (b) { e.preventDefault(); EA.say(b.dataset.say, b); } });
