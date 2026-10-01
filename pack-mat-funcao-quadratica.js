@@ -673,6 +673,30 @@ const CHECK = [
   ['Leio a forma canônica a(x − h)² + k → V = (h, k).', 'treino?l=c'], ['Interpreto problemas com unidade e frase.', 'problemas'],
   ['Esboço concavidade, eixo de simetria e vértice.', 'grafico'], ['Fiz o simulado com 80% ou mais e corrigi os erros.', 'simulado'],
 ];
+/* Mapas mentais da Lulu (imagens conferidas; erros corrigidos na própria imagem — ver nota de cada uma). */
+const IMG = '../img/lulu-mapas/';
+const MINDMAPS = [
+  ['m-codigo', 'Código A → X → Y → V', '✔ Conferido. A = coeficientes e sinal de a · X = x_v · Y = y_v · V = vértice + frase.'],
+  ['m-onde-quando', 'Onde/quando × quanto · Mapa anti-confusão', '🛠️ Corrigido: retirada a 1ª coluna, que trocava o X do código (X é x_v, não “sinal de a”).'],
+  ['m-vertice', 'Vértice passo a passo · pontos notáveis · problemas', '🛠️ Corrigido: o sinal de a NÃO define o valor de y_v (só diz se é máximo ou mínimo); gráfico refeito com (0, c) na curva e raízes simétricas ao eixo.'],
+  ['m-checklist', 'Vértice · gráfico · erros comuns · checklist', '✔ Conferido: V(3, −4), V(2, 11), V(2, −1), bola 22 m em 2 s, área 100 m².'],
+  ['m-geral', 'Mapa geral da função quadrática', '✔ Conferido: V(2, 3), V(3, −4), bola 22 m em 2 s. Desenhos de gráfico são esboços, fora de escala.'],
+  ['m-funcao', 'Função quadrática completa (12 blocos)', '✔ Conferido: tabela de x² − 6x + 5, V(2, 3), V(5, 4), bola 22 m. Foco e diretriz: curiosidade, não cai no foco da prova.'],
+];
+const mindMap = (idx) => {
+  const col = ['yellow', 'blue', 'purple', 'pink', 'green', 'orange', 'teal', 'red', 'purple', 'blue', 'green'];
+  const W = 380, H = 420, cx = 190, cy = 210, bw = 108, bh = 40;
+  const nodes = idx.map(([id, t], k) => { const L = k < 6, i = L ? k : k - 6, n = L ? 6 : 5, gap = 66; return { id, t, k, x: L ? 60 : 320, y: cy + (i - (n - 1) / 2) * gap, big: id === 'm8' || id === 'm11' }; });
+  const words = (t) => { const w = t.split(' '); if (t.length <= 13) return [t]; const m = Math.ceil(w.length / 2); return [w.slice(0, m).join(' '), w.slice(m).join(' ')]; };
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Mapa mental: vértice no centro e 11 galhos" style="display:block;max-width:460px;margin:0 auto;font-family:Lexend,Arial,sans-serif">
+    ${nodes.map(n => `<path d="M${cx} ${cy} Q${(cx + n.x) / 2 + (n.y - cy) * .15} ${(cy + n.y) / 2 - (n.x - cx) * .15} ${n.x} ${n.y}" fill="none" stroke="${MAPCOL[col[n.k]][1]}" stroke-width="${n.big ? 4 : 2.5}" stroke-linecap="round" opacity=".7"/>`).join('')}
+    <ellipse cx="${cx}" cy="${cy}" rx="70" ry="50" fill="#0B2A4A"/><text x="${cx}" y="${cy - 12}" text-anchor="middle" fill="#F2B544" font-size="15" font-weight="700">VÉRTICE</text>
+    <text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="#fff" font-size="13">V = (x_v, y_v)</text><text x="${cx}" y="${cy + 26}" text-anchor="middle" fill="#9FB4CC" font-size="9.5">onde/quando · quanto</text>
+    ${nodes.map(n => { const [bg, fg] = MAPCOL[col[n.k]]; const L = words(`${n.k + 1}. ${n.t}`); const w = n.big ? bw + 8 : bw, hh = n.big ? bh + 6 : bh;
+      return `<a href="${R}mapa?s=${n.id}"><rect x="${n.x - w / 2}" y="${n.y - hh / 2}" width="${w}" height="${hh}" rx="12" fill="${bg}" stroke="${fg}" stroke-width="${n.big ? 3 : 1.5}"/>
+      ${L.map((s, i) => `<text x="${n.x}" y="${n.y + (i - (L.length - 1) / 2) * 13 + 4}" text-anchor="middle" fill="${fg}" font-size="${n.big ? 12 : 11.5}" font-weight="700">${esc(s)}</text>`).join('')}${n.big ? `<text x="${n.x + w / 2 - 6}" y="${n.y - hh / 2 + 4}" font-size="14" text-anchor="middle">⭐</text>` : ''}</a>`; }).join('')}
+  </svg>`;
+};
 V.mapa = (el) => {
   EA.ctx.reset({ screen: 'mapa', title: 'Mapa da Lulu', concept: 'vertice' });
   const S = ST(); S.checklist = S.checklist || {};
@@ -688,6 +712,14 @@ V.mapa = (el) => {
     <p class="lead">Tudo o que cai na prova, em um lugar só. Refeito a partir dos mapas mentais, conferido com o seu livro (pp. 253–259).</p>
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">${idx.map(([id, t], k) => `<a href="${R}mapa?s=${id}" class="pin" style="text-decoration:none;color:inherit;${id === 'm8' || id === 'm11' ? 'font-weight:700;border:1.5px solid #C2410C' : ''}">${k + 1}. ${t}</a>`).join('')}</div>
     <div class="callout" style="display:block"><p><b>Checklist final:</b> <span class="mq-ckc">${done()}</span>/${CHECK.length} · <a href="${R}mapa?s=m11">ir para o checklist →</a></p></div>
+
+    <section class="section" id="m0"><div class="section-h"><h2>🧠 Mapa mental da Lulu</h2><span class="muted">toque num galho</span></div>${mindMap(idx)}</section>
+
+    <section class="section" id="mm"><div class="section-h"><h2>🗺️ Mapas mentais conferidos</h2><span class="muted">toque para ampliar</span></div>
+      <p class="muted" style="margin-bottom:8px">Os seus mapas, conta por conta. Onde havia erro, foi corrigido na própria imagem.</p>
+      <div class="mq-mm" style="display:grid;gap:12px">${MINDMAPS.map(([f, t, ok]) => `<figure style="margin:0;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;background:#fff">
+        <a href="${IMG}${f}.jpg" target="_blank" rel="noopener"><img src="${IMG}${f}.jpg" alt="${esc(t)}" loading="lazy" style="display:block;width:100%;height:auto"></a>
+        <figcaption style="padding:8px 12px"><b>${t}</b><br><small>${ok}</small></figcaption></figure>`).join('')}</div></section>
 
     ${P('m1', 1, 'yellow', 'DICAS DE OURO DA LULU', 'macetes para responder no automático', `<ul class="mq-steps">
       <li>🔎 <b>Achou x²?</b> É parábola. Organize em ordem: ax² + bx + c.</li>
