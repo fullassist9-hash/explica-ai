@@ -301,10 +301,13 @@ V.home = (el) => {
     </section>
     <div class="mastery"><div class="ring" style="--p:${m.all}"><div>${m.all}%</div></div>
       <p><strong>Domínio geral</strong>Cada acerto e cada treino enchem o círculo.</p></div>
-    ${card(`<p class="eyebrow">Prova amanhã? Hoje à noite (~60 min)</p><ol class="mq-steps"><li><a href="${R}aula"><b>Aula guiada</b></a> · 20 min</li><li><a href="${R}treino">Treino médio</a> · 15 min</li><li><a href="${R}diagnostico">Diagnóstico</a> ou <a href="${R}simulado">Simulado</a> · 15 min</li><li><a href="${R}mapa?s=m8">Erros mais comuns</a> + <a href="${R}revisao">revisar o que errou</a> · 10 min</li><li><a href="${R}mapa?s=m11">Checklist final da Lulu</a> · 5 min</li></ol><p class="muted">Amanhã cedo: só o <a href="${R}mapa?s=m9">resumo final</a> e o <a href="${R}mapa?s=m11">checklist</a> (5 min). Nada de matéria nova. Dormir bem fixa o que você estudou.</p>`, 'margin:14px 0')}
+    ${card(`<p class="eyebrow">Prova amanhã? Hoje à noite (~60 min)</p><ol class="mq-steps"><li><a href="${R}aula"><b>Aula guiada</b></a> · 20 min</li><li><a href="${R}treino">Treino médio</a> · 15 min</li><li><a href="${R}diagnostico">Diagnóstico</a> ou <a href="${R}simulado">Simulado</a> · 15 min</li><li><a href="${R}mapa?s=m8">Erros mais comuns</a> + <a href="${R}revisao">revisar o que errou</a> · 10 min</li><li><a href="${R}mapa?s=m11">Checklist final da Lulu</a> · 5 min</li></ol><p class="muted">Amanhã cedo: <a href="${R}manha"><b>Manhã da prova</b></a> (10 min) e o <a href="${R}mapa?s=m11">checklist</a>. Nada de matéria nova. Dormir bem fixa o que você estudou.</p>`, 'margin:14px 0')}
+    <a class="mz-cta" href="${R}manha" style="display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;margin:14px 0;padding:14px 16px;border-radius:20px;text-decoration:none;color:#fff;background:linear-gradient(135deg,#0B2A4A,#123E6B);box-shadow:var(--elevation-2,0 6px 18px rgba(11,42,74,.25))">
+      <span style="font-size:32px;line-height:1" aria-hidden="true">☀️</span><span><b style="font-size:18px;color:#F2B544">Manhã da prova · 10 min</b><br><small style="color:#DCE6F2">respirar · código · 5 questões dos seus erros · protocolo</small></span>${EA.icon('chevronRight', 22)}</a>
     <div class="cta-grid">
       <a class="btn btn-primary" href="${R}aula">${EA.icon('play', 20)} Aula guiada do vértice · comece aqui</a>
       <a class="btn btn-brand" href="${R}mapa">${EA.icon('layers', 20)} Mapa da Lulu · erros comuns · checklist final</a>
+      <a class="btn btn-ghost" href="${R}folha">${EA.icon('book', 20)} Folha de revisão · imprimir ou PDF</a>
       <a class="btn btn-ghost" href="${R}regras">${EA.icon('flame', 20)} Regras de ouro · “quando ou quanto?”</a>
       <a class="btn btn-ghost" href="${R}vertice">${EA.icon('target', 20)} Teoria do vértice</a>
       <div class="btn-row">
@@ -711,6 +714,7 @@ V.mapa = (el) => {
   el.append(h(`<div>${STYLE}<p class="eyebrow">Função quadrática · vértice, máximo e mínimo</p><h1 class="screen-title">Mapa da Lulu</h1>
     <p class="lead">Tudo o que cai na prova, em um lugar só. Refeito a partir dos mapas mentais, conferido com o seu livro (pp. 253–259).</p>
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">${idx.map(([id, t], k) => `<a href="${R}mapa?s=${id}" class="pin" style="text-decoration:none;color:inherit;${id === 'm8' || id === 'm11' ? 'font-weight:700;border:1.5px solid #C2410C' : ''}">${k + 1}. ${t}</a>`).join('')}</div>
+    <div class="mq-row" style="margin:4px 0 10px"><a class="btn btn-primary sm" href="${R}manha">☀️ Manhã da prova</a><a class="btn btn-ghost sm" href="${R}folha">🖨️ Folha de revisão</a></div>
     <div class="callout" style="display:block"><p><b>Checklist final:</b> <span class="mq-ckc">${done()}</span>/${CHECK.length} · <a href="${R}mapa?s=m11">ir para o checklist →</a></p></div>
 
     <section class="section" id="m0"><div class="section-h"><h2>🧠 Mapa mental da Lulu</h2><span class="muted">toque num galho</span></div>${mindMap(idx)}</section>
@@ -721,7 +725,7 @@ V.mapa = (el) => {
         <a href="${IMG}${f}.jpg" target="_blank" rel="noopener"><img src="${IMG}${f}.jpg" alt="${esc(t)}" loading="lazy" style="display:block;width:100%;height:auto"></a>
         <figcaption style="padding:8px 12px"><b>${t}</b><br><small>${ok}</small></figcaption></figure>`).join('')}</div></section>
 
-    ${P('m1', 1, 'yellow', 'DICAS DE OURO DA LULU', 'macetes para responder no automático', `<ul class="mq-steps">
+    ${P('m1', 1, 'yellow', 'DICAS DE OURO DA LULU', 'macetes para responder no automático', `${sayBtn('Dicas de ouro. Achou x ao quadrado, é parábola. Positivo é U, fundo, mínimo. Negativo é montanha, topo, máximo. O menos da fórmula encontra o sinal do b. O vértice sempre tem dois números. x v é quando, y v é quanto.')}<ul class="mq-steps">
       <li>🔎 <b>Achou x²?</b> É parábola. Organize em ordem: ax² + bx + c.</li>
       <li>😊 <b>POSITIVO = U = FUNDO = MÍNIMO</b> &nbsp;·&nbsp; ⛰️ <b>NEGATIVO = ∩ = TOPO = MÁXIMO</b></li>
       <li>➖ <b>O menos da fórmula encontra o sinal do b:</b> b = −6 → −b = +6.</li>
@@ -770,7 +774,7 @@ V.mapa = (el) => {
     ${P('m7', 7, 'purple', 'RELAÇÕES IMPORTANTES', 'o que liga uma coisa à outra', `${tbl([['Relação', 'Fórmula / regra'], ['Eixo de simetria', 'x = x_v'], ['Duas raízes reais', 'x_v = (x₁ + x₂)/2'], ['Ordenada do vértice', 'y_v = f(x_v) = −Δ/(4a)'], ['Discriminante', 'Δ = b² − 4ac: Δ &gt; 0 duas raízes · Δ = 0 uma (tangente) · Δ &lt; 0 nenhuma'], ['Corte no eixo y', '(0, c)'], ['Forma do vértice (canônica)', 'y = a(x − h)² + k → V = (h, k)'], ['Forma fatorada', 'y = a(x − x₁)(x − x₂) → raízes x₁ e x₂'], ['Imagem', 'a &gt; 0: y ≥ y_v · a &lt; 0: y ≤ y_v'], ['Crescimento', 'a &gt; 0: decresce até x_v e cresce depois · a &lt; 0: cresce até x_v e decresce depois'], ['Ponto simétrico', '(0, c) tem simétrico (2x_v, c)']])}
       <p class="muted" style="margin-top:6px">Todas as formas representam a MESMA parábola; o gráfico não muda.</p>`)}
 
-    ${P('m8', 8, 'red', 'ERROS MAIS COMUNS', 'alta performance: veja o erro, o certo e treine na hora', `<p>Em vermelho, o que acontece na prova. Em verde, o certo. Os números mostram quantas vezes <b>você</b> já errou cada um aqui no app.</p>
+    ${P('m8', 8, 'red', 'ERROS MAIS COMUNS', 'alta performance: veja o erro, o certo e treine na hora', `${sayBtn('Erros mais comuns. ' + ERRMAP.map((e, k) => (k + 1) + '. ' + e.t + '. Macete: ' + e.mac.replace(/[·→]/g, ',')).join(' '))}<p>Em vermelho, o que acontece na prova. Em verde, o certo. Os números mostram quantas vezes <b>você</b> já errou cada um aqui no app.</p>
       <div class="mq-err" style="margin-top:8px">${ERRMAP.map((e, k) => { const n = e.code ? (S.errtypes || {})[e.code] || 0 : 0; return `<div style="border:1.5px solid ${n ? '#B91C1C' : '#E5E7EB'};border-radius:14px;padding:10px">
         <p style="display:flex;justify-content:space-between;gap:8px"><b>${k + 1}. ${e.t}</b>${n ? `<span style="color:#B91C1C;font-weight:700;white-space:nowrap">você: ${n}×</span>` : ''}</p>
         <p style="margin-top:6px;background:#FDE8E8;border-radius:10px;padding:6px 8px">✗ ${e.bad}</p><p style="margin-top:4px;background:#E5F7EC;border-radius:10px;padding:6px 8px">✓ ${e.good}</p>
@@ -942,6 +946,99 @@ V.simulado = (el) => {
     <p class="lead">Sem dicas. No final você vê a nota e revisa só o que errou. <small class="muted">Questões de treino, não são da prova real.</small></p><div class="quiz"></div></div>`));
   EA.Quiz($('.quiz', el), shuffle(pick), { mode: 'exam' });
 };
+
+/* ---------------- MANHÃ DA PROVA — 10 min, 5 etapas, sem matéria nova ----------------
+   Base: prática de recuperação curta (testing effect), foco nos erros pessoais e regulação da ansiedade (respiração lenta). */
+const TOP_ERR_DEFAULT = [SIGN, INC, XY];
+const myTopErrs = () => { const e = Object.entries(ST().errtypes || {}).sort((a, b) => b[1] - a[1]).map(([k]) => k); return [...new Set([...e, ...TOP_ERR_DEFAULT])].slice(0, 3); };
+const MSTYLE = `<style>
+.mz-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0 16px}.mz-steps i{height:6px;border-radius:6px;background:var(--color-border-subtle,#E5E7EB);transition:background .25s}.mz-steps i.on{background:var(--color-brand-primary,#0B5FFF)}
+.mz-nav{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin:18px 0 110px}.mz-nav .btn{min-height:48px;justify-content:center}
+.mz-breath{width:180px;height:180px;margin:18px auto;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#E3F0FF 0,#BFDBFE 70%);color:#0B2A4A;font-weight:700;font-size:18px;text-align:center;animation:mzb 12s ease-in-out infinite}
+@keyframes mzb{0%,100%{transform:scale(.72)}33%,50%{transform:scale(1)}83%{transform:scale(.72)}}
+@media (prefers-reduced-motion:reduce){.mz-breath{animation:none}}
+.mz-code{display:grid;gap:8px}.mz-code div{display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center;padding:12px;border-radius:16px;border:1.5px solid}
+.mz-code b{font-size:26px;text-align:center}.mz-big{font-size:22px;font-weight:800;text-align:center;line-height:1.35}
+</style>`;
+V.manha = (el) => {
+  EA.ctx.reset({ screen: 'manha', title: 'Manhã da prova', concept: 'vertice' });
+  let st = 0; const N = 5;
+  const tops = myTopErrs(), errs = tops.map(k => ERRMAP.find(e => e.code === k)).filter(Boolean);
+  const warm = () => { const S = ST(), pool = Q.filter(q => (q.lv || 1) <= 2);
+    const byErr = shuffle(pool.filter(q => tops.includes(q.k) && !S.correct[q.id])).slice(0, 3);
+    return byErr.concat(shuffle(pool.filter(q => q.t === 'vert' && !byErr.includes(q))).slice(0, 5 - byErr.length)); };
+  const stages = [
+    ['Respire primeiro', '1 min', () => `<p class="lead">Ansiedade ocupa a memória de trabalho. Três respirações lentas devolvem espaço para a matemática.</p>
+      <div class="mz-breath" aria-hidden="true">inspire 4<br>segure 2<br>solte 6</div>
+      <p class="center muted">Acompanhe o círculo: cresce quando você inspira, diminui quando solta. Faça 3 vezes.</p>`,
+      'Respire comigo. Inspire contando até quatro. Segure dois. Solte devagar contando até seis. Mais duas vezes. Você estudou. Você sabe o caminho.'],
+    ['O código da prova', '2 min', () => `<p class="lead">Toda questão de vértice segue o mesmo caminho. Leia em voz alta uma vez.</p>
+      <div class="mz-code">${[['A', '#C2185B', '#FDE7F0', 'a, b, c <b style="font-size:inherit">com sinal</b> · a &gt; 0 → U → <b style="font-size:inherit">MÍNIMO</b> · a &lt; 0 → ∩ → <b style="font-size:inherit">MÁXIMO</b>'], ['X', '#0B5FFF', '#E3F0FF', 'x_v = −b/(2a) → ONDE / QUANDO'], ['Y', '#1F8A5B', '#E5F7EC', 'y_v = f(x_v) → QUANTO (potência antes!)'], ['V', '#6D28D9', '#EFE7FD', 'V = (x_v, y_v) + frase com unidade']]
+        .map(([l, fg, bg, t]) => `<div style="border-color:${fg};background:${bg}"><b style="color:${fg}">${l}</b><span>${t}</span></div>`).join('')}</div>
+      <p class="mz-big" style="margin-top:14px">POSITIVO = U = MÍNIMO<br>NEGATIVO = ∩ = MÁXIMO</p>`,
+      'Código da prova. A: identifique a, b e c com sinal. a positivo, mínimo. a negativo, máximo. X: x v igual a menos b sobre dois a. Isso é onde ou quando. Y: y v igual a f de x v. Isso é quanto. V: escreva o vértice completo e uma frase com unidade.'],
+    ['Aquecimento', '4 min', () => `<p class="lead">5 questões curtas, escolhidas a partir dos <b>seus</b> erros. Errou? Ótimo: errar agora é acertar na prova.</p><div class="mz-quiz" style="margin-top:10px"></div>`, ''],
+    ['Seus 3 erros a vigiar', '2 min', () => `<p class="lead">${Object.keys(ST().errtypes || {}).length ? 'Estes são os que mais apareceram no seu treino.' : 'Os três que mais derrubam nota nesta matéria.'} Leia o errado e o certo.</p>
+      <div class="mq-err" style="margin-top:8px">${errs.map((e, k) => `<div style="border:1.5px solid #E5E7EB;border-radius:14px;padding:10px"><p><b>${k + 1}. ${e.t}</b></p>
+        <p style="margin-top:6px;background:#FDE8E8;border-radius:10px;padding:6px 8px">✗ ${e.bad}</p><p style="margin-top:4px;background:#E5F7EC;border-radius:10px;padding:6px 8px">✓ ${e.good}</p><p style="margin-top:6px">💡 ${e.mac}</p></div>`).join('')}</div>`,
+      'Seus erros a vigiar. ' + errs.map(e => e.t + '. ' + e.mac.replace(/[·→]/g, ',')).join(' ')],
+    ['Na hora da prova', '1 min', () => `<ol class="mq-steps" style="font-size:16px">
+      <li><b>Leia e sublinhe</b> o que a pergunta pede: QUANDO/ONDE (x_v) ou QUANTO (y_v)?</li><li><b>A:</b> escreva a = , b = , c = com sinal.</li><li><b>X:</b> x_v = −b/(2a). <b>Y:</b> y_v = f(x_v).</li>
+      <li><b>V:</b> V = (x_v, y_v) e a frase com unidade.</li><li><b>Teste do desenho:</b> a &gt; 0 e deu máximo? Volte e confira.</li><li>Travou? Pule e volte depois. Questão fácil primeiro.</li></ol>
+      <div class="remind good" style="margin-top:14px"><div class="h">Você está pronta, Lulu. 💪</div><p>Você não precisa lembrar de tudo. Precisa lembrar do caminho: A → X → Y → V.</p></div>`,
+      'Na hora da prova. Leia e sublinhe: quando ou quanto. Escreva a, b e c com sinal. Calcule x v e depois y v. Escreva o vértice e uma frase com unidade. Faça o teste do desenho. Travou, pule e volte depois. Você está pronta.'],
+  ];
+  const draw = () => { const [t, min, body, sayTxt] = stages[st];
+    el.innerHTML = ''; el.append(h(`<div>${STYLE}${MSTYLE}<p class="eyebrow">Manhã da prova · etapa ${st + 1} de ${N} · ${min}</p>
+      <div class="mz-steps" aria-hidden="true">${stages.map((_, k) => `<i class="${k <= st ? 'on' : ''}"></i>`).join('')}</div>
+      <div class="section-h"><h1 class="screen-title" style="margin:0">${t}</h1>${sayTxt ? sayBtn(sayTxt) : ''}</div>
+      <div class="view-enter">${body()}</div>
+      <div class="mz-nav">${st ? '<button class="btn btn-ghost mz-prev">← Voltar</button>' : `<a class="btn btn-ghost" href="${R}home">Sair</a>`}
+        ${st < N - 1 ? '<button class="btn btn-primary mz-next">Próximo →</button>' : `<a class="btn btn-primary mz-end" href="${R}mapa?s=m11">Ver meu checklist ✓</a>`}</div></div>`));
+    if (st === 2) EA.Quiz($('.mz-quiz', el), warm(), { label: 'Aquecimento' });
+    const nx = $('.mz-next', el), pv = $('.mz-prev', el);
+    nx && (nx.onclick = () => { fx.tap(); st++; draw(); scrollTo0(); }); pv && (pv.onclick = () => { fx.tap(); st--; draw(); scrollTo0(); });
+    if (st === N - 1) { fx.done(); const S = ST(); S.manha = (S.manha || 0) + 1; EA.save(); }
+    $('#view') && $('#view').focus({ preventScroll: true }); };
+  const scrollTo0 = () => window.scrollTo(0, 0);
+  draw();
+};
+
+/* ---------------- FOLHA DE REVISÃO — 1 página A4, imprimível / PDF ---------------- */
+const PSTYLE = `<style>
+.fz{display:grid;gap:10px}.fz h3{margin:0 0 4px;font-size:15px;letter-spacing:.3px}.fz .bx{border:1.5px solid #CBD5E1;border-radius:12px;padding:8px 10px;break-inside:avoid}
+.fz table{width:100%;border-collapse:collapse;font-size:13px}.fz td,.fz th{border-top:1px solid #E5E7EB;padding:3px 4px;text-align:left;vertical-align:top}
+.fz .bad{color:#B91C1C}.fz .good{color:#166534}.fz ul{margin:0;padding-left:16px}.fz li{margin:2px 0}.fz .ck{list-style:none;padding:0}.fz .ck li::before{content:"☐ ";font-size:15px}
+.fz .qplot{max-width:260px;margin:4px auto 0}
+@media (min-width:700px){.fz{grid-template-columns:1fr 1fr}.fz .full{grid-column:1/-1}}
+@media print{@page{size:A4;margin:7mm}html,body{background:#fff!important;padding:0!important;margin:0!important;min-height:0!important}.topbar,#tabbar,#fab,#toast,.fz-noprint,.say{display:none!important}
+  #app,.app,#view{padding:0!important;margin:0!important;max-width:none!important;width:auto!important;min-height:0!important}.fz{grid-template-columns:1fr 1fr;gap:5px;font-size:8.6pt;line-height:1.25}.fz .full{grid-column:1/-1}
+  .fz h3{font-size:9.6pt;margin-bottom:2px}.fz table{font-size:7.9pt}.fz td,.fz th{padding:1px 3px}.fz .bx{padding:4px 6px;border-radius:7px}.fz .qplot{max-width:150px}.fz-title{font-size:12.5pt!important;margin:0 0 3px!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>`;
+V.folha = (el) => {
+  EA.ctx.reset({ screen: 'folha', title: 'Folha de revisão', concept: 'vertice' });
+  const fullTxt = 'Folha de revisão. Código A, X, Y, V. A: a, b e c com sinal. a positivo, mínimo. a negativo, máximo. X: x v igual a menos b sobre dois a, é o quando. Y: y v igual a f de x v, é o quanto. V: vértice com dois números e frase com unidade. Exemplo: x ao quadrado menos seis x mais cinco. a igual a 1, b menos 6, c 5. x v igual a 3. y v igual a menos 4. Vértice 3, menos 4, mínimo. Erros comuns: ' + ERRMAP.map(e => e.t).join('. ') + '.';
+  el.append(h(`<div>${STYLE}${PSTYLE}
+    <div class="fz-noprint"><p class="eyebrow">Para revisar sem celular</p><div class="section-h"><h1 class="screen-title" style="margin:0">Folha de revisão</h1>${sayBtn(fullTxt)}</div>
+      <p class="lead">Uma página com tudo o que importa. Imprima ou salve em PDF e leia no caminho.</p>
+      <button class="btn btn-primary fz-print" style="margin:10px 0 14px;min-height:48px">🖨️ Imprimir ou salvar PDF</button></div>
+    <h2 class="fz-title" style="font-size:20px;margin:6px 0 8px">Função quadrática · Vértice — Folha da Lulu</h2>
+    <div class="fz">
+      <div class="bx"><h3>1 · Código A → X → Y → V</h3><ul><li><b>A</b> a, b, c com sinal · a &gt; 0 → U → <b>MÍNIMO</b> · a &lt; 0 → ∩ → <b>MÁXIMO</b></li><li><b>X</b> x_v = −b/(2a) → ONDE / QUANDO</li><li><b>Y</b> y_v = f(x_v) → QUANTO</li><li><b>V</b> V = (x_v, y_v) + frase com unidade</li></ul></div>
+      <div class="bx"><h3>2 · Fórmulas</h3><ul><li>y = ax² + bx + c, a ≠ 0</li><li>Δ = b² − 4ac (nº de raízes; <u>não</u> decide máx/mín)</li><li>y_v = f(x_v) = −Δ/(4a) · eixo x = x_v</li><li>Raízes x₁, x₂ → x_v = (x₁ + x₂)/2</li><li>a(x − h)² + k → V = (h, k) · corte no eixo y: (0, c)</li></ul></div>
+      <div class="bx"><h3>3 · Onde/quando × quanto</h3><table><tr><th>A pergunta diz…</th><th>Responda</th></tr><tr><td>em que instante, quantos segundos, para qual quantidade, em que x</td><td><b>x_v</b></td></tr><tr><td>altura máxima, lucro máximo, área máxima, custo mínimo, valor mínimo</td><td><b>y_v</b></td></tr><tr><td>ponto de máximo/mínimo, coordenadas do vértice</td><td><b>V = (x_v, y_v)</b></td></tr><tr><td>zeros, onde corta o eixo x</td><td>raízes (y = 0)</td></tr></table></div>
+      <div class="bx"><h3>4 · Exemplo resolvido</h3><p>f(x) = x² − 6x + 5 → a = 1, b = −6, c = 5 · a &gt; 0 → mínimo<br>x_v = −(−6)/(2·1) = 3 · y_v = 9 − 18 + 5 = −4<br><b>V = (3, −4): valor mínimo −4, quando x = 3.</b></p>${plot(1, -6, 5, { w: 300, h: 170 })}</div>
+      <div class="bx"><h3>5 · Problema típico</h3><p>h(t) = −5t² + 20t + 2 (m, s) · a = −5 &lt; 0 → máximo<br>t_v = −20/(2·(−5)) = 2 s · h(2) = −20 + 40 + 2 = 22 m<br><b>“A altura máxima é 22 m, atingida após 2 s.”</b></p></div>
+      <div class="bx full"><h3>6 · Erros mais comuns (✗ errado → ✓ certo)</h3><table>${ERRMAP.map((e, k) => `<tr><td><b>${k + 1}.</b> ${e.t}</td><td class="bad">✗ ${e.bad}</td><td class="good">✓ ${e.good}</td></tr>`).join('')}</table></div>
+      <div class="bx full"><h3>7 · Checklist final da Lulu</h3><ul class="ck" style="columns:2;column-gap:16px">${CHECK.map(([t]) => `<li>${t}</li>`).join('')}</ul></div>
+    </div>
+    <p class="muted fz-noprint" style="margin-top:12px;font-size:13px">No celular: “Imprimir” → “Salvar como PDF”. A folha sai em uma página A4.</p></div>`));
+  $('.fz-print', el).onclick = () => { fx.tap(); window.print(); };
+};
+
+/* Offline: pede ao service worker para guardar os mapas e a capa (só nesta entrada). */
+const OFFLINE_ASSETS = ['../img/mat-parabola.svg', ...MINDMAPS.map(([f]) => IMG + f + '.jpg')];
+if ('serviceWorker' in navigator) navigator.serviceWorker.ready.then(reg => reg.active && reg.active.postMessage({ type: 'precache', urls: OFFLINE_ASSETS.map(u => new URL(u, location.href).href) })).catch(() => {});
 
 EA.registerPack({
   id: ID, version: 1, status: 'active',
