@@ -308,6 +308,7 @@ V.home = (el) => {
       <a class="btn btn-primary" href="${R}aula">${EA.icon('play', 20)} Aula guiada do vértice · comece aqui</a>
       <a class="btn btn-brand" href="${R}mapa">${EA.icon('layers', 20)} Mapa da Lulu · erros comuns · checklist final</a>
       <a class="btn btn-ghost" href="${R}folha">${EA.icon('book', 20)} Folha de revisão · imprimir ou PDF</a>
+      <a class="btn btn-ghost" href="${R}voz">${EA.icon('soundOn', 20)} Voz do app · escolher a mais natural</a>
       <a class="btn btn-ghost" href="${R}regras">${EA.icon('flame', 20)} Regras de ouro · “quando ou quanto?”</a>
       <a class="btn btn-ghost" href="${R}vertice">${EA.icon('target', 20)} Teoria do vértice</a>
       <div class="btn-row">
@@ -714,7 +715,7 @@ V.mapa = (el) => {
   el.append(h(`<div>${STYLE}<p class="eyebrow">Função quadrática · vértice, máximo e mínimo</p><h1 class="screen-title">Mapa da Lulu</h1>
     <p class="lead">Tudo o que cai na prova, em um lugar só. Refeito a partir dos mapas mentais, conferido com o seu livro (pp. 253–259).</p>
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">${idx.map(([id, t], k) => `<a href="${R}mapa?s=${id}" class="pin" style="text-decoration:none;color:inherit;${id === 'm8' || id === 'm11' ? 'font-weight:700;border:1.5px solid #C2410C' : ''}">${k + 1}. ${t}</a>`).join('')}</div>
-    <div class="mq-row" style="margin:4px 0 10px"><a class="btn btn-primary sm" href="${R}manha">☀️ Manhã da prova</a><a class="btn btn-ghost sm" href="${R}folha">🖨️ Folha de revisão</a></div>
+    <div class="mq-row" style="margin:4px 0 10px"><a class="btn btn-primary sm" href="${R}manha">☀️ Manhã da prova</a><a class="btn btn-ghost sm" href="${R}folha">🖨️ Folha de revisão</a><a class="btn btn-ghost sm" href="${R}voz">🔊 Voz</a></div>
     <div class="callout" style="display:block"><p><b>Checklist final:</b> <span class="mq-ckc">${done()}</span>/${CHECK.length} · <a href="${R}mapa?s=m11">ir para o checklist →</a></p></div>
 
     <section class="section" id="m0"><div class="section-h"><h2>🧠 Mapa mental da Lulu</h2><span class="muted">toque num galho</span></div>${mindMap(idx)}</section>
@@ -947,6 +948,27 @@ V.simulado = (el) => {
   EA.Quiz($('.quiz', el), shuffle(pick), { mode: 'exam' });
 };
 
+/* ---------------- VOZ DO APP — escolher a voz mais humana do aparelho ---------------- */
+V.voz = (el) => {
+  EA.ctx.reset({ screen: 'voz', title: 'Voz do app', concept: 'vertice' });
+  const SAMPLE = 'Oi, Lulu! Para achar o vértice: x_v = −b/(2a). Em f(x) = x² − 6x + 5, x_v = 3 e y_v = −4. Como a > 0, é ponto de mínimo.';
+  el.append(h(`<div>${STYLE}<p class="eyebrow">Ajuste</p><h1 class="screen-title">Voz do app</h1>
+    <p class="lead">Cada celular tem vozes diferentes. Teste e escolha a que soa mais natural para você. As marcadas ★ são as mais humanas.</p>
+    <div class="callout" style="display:block;margin:12px 0"><p><b>Velocidade</b></p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">${[[0.95, 'Calma'], [1.05, 'Normal'], [1.18, 'Rápida']].map(([r, t]) => `<button class="btn btn-ghost sm vz-r" data-r="${r}" style="min-height:44px">${t}</button>`).join('')}</div></div>
+    <div class="vz-list" style="display:grid;gap:8px"></div>
+    <p class="muted" style="margin-top:12px;font-size:14px">Não achou uma voz boa? No Android: Configurações → Acessibilidade → Saída de texto para fala → <b>Mecanismo do Google</b> → instalar “Português (Brasil)” de alta qualidade. No iPhone: Ajustes → Acessibilidade → Conteúdo Falado → Vozes → Português (Brasil) → baixar uma voz <b>Aprimorada</b> ou <b>Premium</b>. Depois volte aqui.</p>
+    <a class="btn btn-primary" style="margin:14px 0 110px;min-height:48px" href="${R}home">Pronto</a></div>`));
+  const paintR = () => $$('.vz-r', el).forEach(b => { const on = Math.abs((EA.settings.voiceRate || 1.05) - +b.dataset.r) < .01; b.classList.toggle('btn-primary', on); b.classList.toggle('btn-ghost', !on); b.setAttribute('aria-pressed', on); });
+  $$('.vz-r', el).forEach(b => b.onclick = () => { EA.settings.voiceRate = +b.dataset.r; EA.saveSettings(); paintR(); say(SAMPLE); }); paintR();
+  const paint = () => { const vs = EA.voiceList(), cur = EA.settings.voiceName || (vs[0] && vs[0].name), box = $('.vz-list', el); if (!box) return;
+    box.innerHTML = vs.length ? vs.slice(0, 12).map((v, k) => { const best = /natural|neural|online|premium|enhanced|aprimorad|melhorad|google/i.test(v.name + ' ' + v.voiceURI);
+      return `<button class="vz-v" data-n="${esc(v.name)}" aria-pressed="${v.name === cur}" style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;text-align:left;min-height:56px;padding:10px 12px;border-radius:14px;font:inherit;cursor:pointer;border:2px solid ${v.name === cur ? 'var(--color-brand-primary,#0B5FFF)' : 'var(--color-border-subtle,#E5E7EB)'};background:${v.name === cur ? 'var(--color-brand-primary-bg,#E3F0FF)' : 'var(--color-surface-raised,#fff)'}">
+        <span style="font-size:18px">${v.name === cur ? '✓' : (best ? '★' : '')}</span><span><b>${esc(v.name.replace(/Microsoft |Google /, ''))}</b><br><small class="muted">${esc(v.lang)}${best ? ' · mais natural' : ''}${k === 0 ? ' · recomendada' : ''}</small></span><span class="muted">▶ testar</span></button>`; }).join('')
+      : '<p class="muted">Este navegador não informou vozes ainda. Toque em testar mais uma vez em alguns segundos.</p>';
+    $$('.vz-v', el).forEach(b => b.onclick = () => { EA.setVoice(b.dataset.n); paint(); say(SAMPLE); }); };
+  paint(); if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', paint, { once: true });
+};
+
 /* ---------------- MANHÃ DA PROVA — 10 min, 5 etapas, sem matéria nova ----------------
    Base: prática de recuperação curta (testing effect), foco nos erros pessoais e regulação da ansiedade (respiração lenta). */
 const TOP_ERR_DEFAULT = [SIGN, INC, XY];
@@ -970,7 +992,7 @@ V.manha = (el) => {
   const stages = [
     ['Respire primeiro', '1 min', () => `<p class="lead">Ansiedade ocupa a memória de trabalho. Três respirações lentas devolvem espaço para a matemática.</p>
       <div class="mz-breath" aria-hidden="true">inspire 4<br>segure 2<br>solte 6</div>
-      <p class="center muted">Acompanhe o círculo: cresce quando você inspira, diminui quando solta. Faça 3 vezes.</p>`,
+      <p class="center muted">Acompanhe o círculo: cresce quando você inspira, diminui quando solta. Faça 3 vezes.</p><p class="center" style="margin-top:8px"><a href="${R}voz">🔊 Voz robótica? Troque aqui</a></p>`,
       'Respire comigo. Inspire contando até quatro. Segure dois. Solte devagar contando até seis. Mais duas vezes. Você estudou. Você sabe o caminho.'],
     ['O código da prova', '2 min', () => `<p class="lead">Toda questão de vértice segue o mesmo caminho. Leia em voz alta uma vez.</p>
       <div class="mz-code">${[['A', '#C2185B', '#FDE7F0', 'a, b, c <b style="font-size:inherit">com sinal</b> · a &gt; 0 → U → <b style="font-size:inherit">MÍNIMO</b> · a &lt; 0 → ∩ → <b style="font-size:inherit">MÁXIMO</b>'], ['X', '#0B5FFF', '#E3F0FF', 'x_v = −b/(2a) → ONDE / QUANDO'], ['Y', '#1F8A5B', '#E5F7EC', 'y_v = f(x_v) → QUANTO (potência antes!)'], ['V', '#6D28D9', '#EFE7FD', 'V = (x_v, y_v) + frase com unidade']]
