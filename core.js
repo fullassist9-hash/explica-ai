@@ -24,7 +24,11 @@ const LS = {
 /* ============ PROFILE ENGINE ============
    Perfis locais. Cada perfil tem seus próprios cadernos, progresso, erros e histórico do tutor.
    Campos escolares são opcionais e privados (nunca aparecem em URL ou telas públicas). */
-const PKEY = 'explica.profiles.v1', AKEY = 'explica.activeProfile.v1', SKEY = 'explica.settings.v1';
+/* Entrada (link): a raiz não tem data-entry e usa as chaves históricas, intactas. Outras entradas (ex.: /lulu/)
+   têm lista de perfis, perfil ativo e preferências próprios no mesmo aparelho — progresso já é separado por perfil+caderno. */
+const ENTRY = EA.ENTRY = document.documentElement.dataset.entry || '';
+const SFX = ENTRY ? ':' + ENTRY : '';
+const PKEY = 'explica.profiles.v1' + SFX, AKEY = 'explica.activeProfile.v1' + SFX, SKEY = 'explica.settings.v1' + SFX;
 EA.SEED_PROFILES = [];            // preenchido por profiles.seed.js
 EA.settings = Object.assign({ sound: true }, LS.get(SKEY, {}));
 EA.saveSettings = () => LS.set(SKEY, EA.settings);
@@ -106,10 +110,13 @@ EA.weakConcepts = (pack, S) => {
   Object.keys(S.wrong).forEach(id => { const q = pack.questions.find(x => x.id === id); if (q && q.c) c[q.c] = (c[q.c] || 0) + 1; });
   return Object.entries(c).sort((a, b) => b[1] - a[1]).map(([k]) => k);
 };
-EA.record = (q, ok) => {
+EA.record = (q, ok, choice) => {
   const S = EA.state(); if (!S) return;
   if (ok) { S.correct[q.id] = 1; delete S.wrong[q.id]; } else { S.wrong[q.id] = Date.now(); delete S.correct[q.id]; }
-  S.quiz_history.push({ q: q.id, ok, t: Date.now() }); if (S.quiz_history.length > 300) S.quiz_history.shift();
+  // tipo de erro (opcional): a alternativa escolhida pode estar mapeada para um erro pedagógico do caderno (q.e)
+  const et = !ok && q.e && choice != null ? q.e[choice] : null;
+  if (et) { S.errtypes = S.errtypes || {}; S.errtypes[et] = (S.errtypes[et] || 0) + 1; }
+  S.quiz_history.push({ q: q.id, ok, t: Date.now(), ...(et ? { e: et } : {}) }); if (S.quiz_history.length > 300) S.quiz_history.shift();
   EA.save(); EA.onProgress && EA.onProgress();
 };
 EA.act = (id, msg) => { const S = EA.state(); if (!S || S.acts[id]) return; S.acts[id] = 1; EA.save(); EA.onProgress && EA.onProgress(); if (msg) toast(msg); };
@@ -186,7 +193,7 @@ EA.Quiz = function Quiz(el, qs, opts = {}) {
     const ok = b.dataset.o === q.o[0];
     $$('.q-opt', el).forEach(x => x.disabled = true);
     answers.push({ q, ok });
-    if (exam) { b.classList.add('sel'); fx.tap(); EA.record(q, ok); setTimeout(() => { i++; draw(); }, 380); return; }
+    if (exam) { b.classList.add('sel'); fx.tap(); EA.record(q, ok, b.dataset.o); setTimeout(() => { i++; draw(); }, 380); return; }
     const OK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
     const NO = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>';
     const mark = (x, cls, ico, tag) => { x.classList.add(cls); $('.l', x).innerHTML = ico; x.insertAdjacentHTML('beforeend', `<span class="q-tag">${tag}</span>`); };
@@ -197,7 +204,7 @@ EA.Quiz = function Quiz(el, qs, opts = {}) {
       mark(rightBtn, 'right', OK, 'Correta');
       if (!list[i].retry) list.splice(Math.min(i + 3, list.length), 0, { q, retry: true });
     }
-    EA.record(q, ok);
+    EA.record(q, ok, b.dataset.o);
     const fb = $('.q-fb', el);
     fb.innerHTML = ok
       ? `<div class="remind good"><div class="h">${OK} ${list[i].retry ? 'Agora foi! Você lembrou.' : 'Isso! Você acertou.'}</div><ul><li>${q.r[0]}</li></ul></div>`
