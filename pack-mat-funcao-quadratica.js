@@ -286,13 +286,14 @@ const STYLE = `<style>.qplot{width:100%;height:auto;display:block;border:1px sol
 .mq-sl input{width:100%}.mq-read{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.mq-read div{background:var(--color-surface-sunken,#F3F4F6);border-radius:12px;padding:8px;text-align:center}
 .mq-read b{display:block;font-size:18px}.mq-uv{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mq-uv div{border-radius:16px;padding:12px;text-align:center;border:1.5px solid}
 .mq-trail{display:grid;gap:6px}.mq-trail a{display:grid;grid-template-columns:36px 1fr auto;gap:8px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--color-surface-raised,#fff);border:1px solid var(--color-border-subtle,#E5E7EB);text-decoration:none;color:inherit}
-.mq-trail b{font-variant-numeric:tabular-nums;color:var(--color-brand-primary,#0B5FFF)}.mq-trail small{color:var(--color-text-secondary,#6B7280)}</style>`;
+.mq-trail b{font-variant-numeric:tabular-nums;color:var(--color-brand-primary,#0B5FFF)}.mq-trail small{color:var(--color-text-secondary,#6B7280)}
+.mq-hero::before{background:url(../img/mat-parabola.svg) center/cover !important}</style>`;
 
 V.home = (el) => {
   EA.ctx.reset({ screen: 'home', title: 'Início do caderno Função Quadrática', concept: 'vertice' });
   const m = EA.mastery(), S = ST(), errs = Object.entries(S.errtypes || {}).sort((a, b) => b[1] - a[1]);
   el.append(h(`<div>${STYLE}
-    <section class="hero">
+    <section class="hero mq-hero">
       <div class="flag"><span>1ª SÉRIE · EM</span><span>MATEMÁTICA</span></div>
       <h1>Função<em>Quadrática</em></h1>
       <p class="sub">Foco da prova: vértice, máximo e mínimo</p>
@@ -300,10 +301,11 @@ V.home = (el) => {
     </section>
     <div class="mastery"><div class="ring" style="--p:${m.all}"><div>${m.all}%</div></div>
       <p><strong>Domínio geral</strong>Cada acerto e cada treino enchem o círculo.</p></div>
-    ${card(`<p class="eyebrow">Prova amanhã? Hoje à noite (~60 min)</p><ol class="mq-steps"><li><a href="${R}aula"><b>Aula guiada</b></a> · 20 min</li><li><a href="${R}treino">Treino médio</a> · 15 min</li><li><a href="${R}diagnostico">Diagnóstico</a> ou <a href="${R}simulado">Simulado</a> · 15 min</li><li><a href="${R}revisao">Revisar só o que errou</a> · 10 min</li><li><a href="${R}regras">Regras de ouro</a> · ⚡ “Quando ou quanto?” · 5 min</li></ol><p class="muted">Amanhã cedo: só as <a href="${R}regras">6 frases e o código A→X→Y→V→FRASE</a> (5 min). Nada de matéria nova. Dormir bem fixa o que você estudou.</p>`, 'margin:14px 0')}
+    ${card(`<p class="eyebrow">Prova amanhã? Hoje à noite (~60 min)</p><ol class="mq-steps"><li><a href="${R}aula"><b>Aula guiada</b></a> · 20 min</li><li><a href="${R}treino">Treino médio</a> · 15 min</li><li><a href="${R}diagnostico">Diagnóstico</a> ou <a href="${R}simulado">Simulado</a> · 15 min</li><li><a href="${R}mapa?s=m8">Erros mais comuns</a> + <a href="${R}revisao">revisar o que errou</a> · 10 min</li><li><a href="${R}mapa?s=m11">Checklist final da Lulu</a> · 5 min</li></ol><p class="muted">Amanhã cedo: só o <a href="${R}mapa?s=m9">resumo final</a> e o <a href="${R}mapa?s=m11">checklist</a> (5 min). Nada de matéria nova. Dormir bem fixa o que você estudou.</p>`, 'margin:14px 0')}
     <div class="cta-grid">
       <a class="btn btn-primary" href="${R}aula">${EA.icon('play', 20)} Aula guiada do vértice · comece aqui</a>
-      <a class="btn btn-brand" href="${R}regras">${EA.icon('flame', 20)} Regras de ouro · código A→X→Y→V · mapas</a>
+      <a class="btn btn-brand" href="${R}mapa">${EA.icon('layers', 20)} Mapa da Lulu · erros comuns · checklist final</a>
+      <a class="btn btn-ghost" href="${R}regras">${EA.icon('flame', 20)} Regras de ouro · “quando ou quanto?”</a>
       <a class="btn btn-ghost" href="${R}vertice">${EA.icon('target', 20)} Teoria do vértice</a>
       <div class="btn-row">
         <a class="btn btn-ghost" href="${R}revisao"><i>${EA.icon('review', 24)}</i>Revisão inteligente</a>
@@ -647,6 +649,159 @@ V.aula = (el) => {
   go();
 };
 
+/* MAPA DA LULU — os mapas mentais refeitos, corrigidos e enriquecidos (nativos, legíveis no celular).
+   Fontes: livro pp. 253–259 + plano personalizado + mapas do GPT (conferidos; erros de rótulo/unidade corrigidos). */
+const MAPCOL = { pink: ['#FDE7F0', '#C2185B'], purple: ['#EFE7FD', '#6D28D9'], blue: ['#E3F0FF', '#0B5FFF'], green: ['#E5F7EC', '#1F8A5B'], orange: ['#FFF0E0', '#C2410C'], yellow: ['#FFF7D6', '#8A6100'], teal: ['#DDF6F3', '#0F766E'], red: ['#FDE8E8', '#B91C1C'] };
+const ERRMAP = [
+  { code: SIGN, t: 'Esquecer o sinal de menos (ou de b)', bad: 'f(x) = x² − 6x + 5 → x_v = −6/2 = −3', good: 'b = −6 → −b = −(−6) = +6 → x_v = 6/2 = 3', mac: 'O menos da fórmula encontra o sinal do b. Escreva b = −6 antes de substituir.' },
+  { code: COEF, t: 'Pegar a, b, c fora de ordem', bad: '5 + 3x − 2x² → a = 5', good: 'Organize: −2x² + 3x + 5 → a = −2, b = 3, c = 5', mac: 'a é SEMPRE quem acompanha x². Termo que falta vale 0.' },
+  { code: CONC, t: 'Trocar máximo com mínimo', bad: 'a = 2 → “tem máximo”', good: 'a = 2 > 0 → U → MÍNIMO', mac: 'POSITIVO = U = FUNDO = MÍNIMO · NEGATIVO = ∩ = TOPO = MÁXIMO.' },
+  { code: CONC, t: 'Usar o Δ para decidir máximo/mínimo', bad: '“Δ > 0, então é mínimo”', good: 'Quem decide é o a. O Δ só diz quantas raízes existem.', mac: 'a olha a ABERTURA · Δ olha as RAÍZES.' },
+  { code: INC, t: 'Calcular só x_v e esquecer y_v', bad: '“O vértice é 3.”', good: 'V = (3, −4)', mac: 'Vértice = endereço completo: (ONDE, QUANTO).' },
+  { code: XY, t: 'Responder x_v quando pediram y_v', bad: '“A altura máxima é 2.” (2 é o tempo!)', good: 'Altura máxima = h(2) = 22 m, atingida em 2 s', mac: 'QUANDO → x_v · QUANTO → y_v. Sublinhe a pergunta.' },
+  { code: ROOT, t: 'Confundir raízes com vértice', bad: 'Raízes 1 e 5 → “V = (1, 5)”', good: 'x_v = (1 + 5)/2 = 3 → V = (3, −4)', mac: 'Raiz = onde y = 0 (eixo x). Vértice = topo ou fundo.' },
+  { code: 'OPERATION_ORDER', t: 'Multiplicar antes do quadrado', bad: '−2·3² = (−2·3)² = 36', good: '−2·3² = −2·9 = −18 · e (−3)² = +9', mac: 'Potência primeiro, depois multiplicação. Parêntese no número negativo.' },
+  { code: CAN, t: 'Trocar o sinal na forma canônica', bad: 'g(x) = (x + 4)² − 1 → V = (4, −1)', good: 'x + 4 = x − (−4) → V = (−4, −1)', mac: 'a(x − h)² + k → V = (h, k). O sinal de dentro troca.' },
+  { code: null, t: 'Errar o sinal em y_v = −Δ/(4a)', bad: 'x² − 6x + 5: y_v = Δ/(4a) = 16/4 = 4', good: 'y_v = −16/4 = −4 (ou f(3) = −4)', mac: 'Calcule y_v por substituição f(x_v). Use −Δ/(4a) só para conferir.' },
+  { code: null, t: 'Esquecer unidade e frase', bad: '“Resposta: 22.”', good: '“A bola atinge a altura máxima de 22 m após 2 s.”', mac: 'Toda resposta de problema termina em frase com unidade.' },
+];
+const CHECK = [
+  ['Identifico a, b e c com os sinais (mesmo fora de ordem).', 'treino?l=k'], ['Digo máximo ou mínimo ANTES de calcular, só pelo sinal de a.', 'aula'],
+  ['Calculo x_v = −b/(2a) sem errar o sinal.', 'treino?l=1'], ['Calculo y_v = f(x_v) fazendo a potência antes.', 'treino?l=2'],
+  ['Escrevo o vértice completo V = (x_v, y_v).', 'treino?l=1'], ['Sei que x_v = ONDE/QUANDO e y_v = QUANTO.', 'regras'],
+  ['Diferencio raízes, (0, c) e vértice.', 'grafico?s=s08'], ['Uso o atalho x_v = (x₁ + x₂)/2 quando sei as raízes.', 'mapa?s=m7'],
+  ['Leio a forma canônica a(x − h)² + k → V = (h, k).', 'treino?l=c'], ['Interpreto problemas com unidade e frase.', 'problemas'],
+  ['Esboço concavidade, eixo de simetria e vértice.', 'grafico'], ['Fiz o simulado com 80% ou mais e corrigi os erros.', 'simulado'],
+];
+/* Mapas mentais da Lulu (imagens conferidas; erros corrigidos na própria imagem — ver nota de cada uma). */
+const IMG = '../img/lulu-mapas/';
+const MINDMAPS = [
+  ['m-codigo', 'Código A → X → Y → V', '✔ Conferido. A = coeficientes e sinal de a · X = x_v · Y = y_v · V = vértice + frase.'],
+  ['m-onde-quando', 'Onde/quando × quanto · Mapa anti-confusão', '🛠️ Corrigido: retirada a 1ª coluna, que trocava o X do código (X é x_v, não “sinal de a”).'],
+  ['m-vertice', 'Vértice passo a passo · pontos notáveis · problemas', '🛠️ Corrigido: o sinal de a NÃO define o valor de y_v (só diz se é máximo ou mínimo); gráfico refeito com (0, c) na curva e raízes simétricas ao eixo.'],
+  ['m-checklist', 'Vértice · gráfico · erros comuns · checklist', '✔ Conferido: V(3, −4), V(2, 11), V(2, −1), bola 22 m em 2 s, área 100 m².'],
+  ['m-geral', 'Mapa geral da função quadrática', '✔ Conferido: V(2, 3), V(3, −4), bola 22 m em 2 s. Desenhos de gráfico são esboços, fora de escala.'],
+  ['m-funcao', 'Função quadrática completa (12 blocos)', '✔ Conferido: tabela de x² − 6x + 5, V(2, 3), V(5, 4), bola 22 m. Foco e diretriz: curiosidade, não cai no foco da prova.'],
+];
+const mindMap = (idx) => {
+  const col = ['yellow', 'blue', 'purple', 'pink', 'green', 'orange', 'teal', 'red', 'purple', 'blue', 'green'];
+  const W = 380, H = 420, cx = 190, cy = 210, bw = 108, bh = 40;
+  const nodes = idx.map(([id, t], k) => { const L = k < 6, i = L ? k : k - 6, n = L ? 6 : 5, gap = 66; return { id, t, k, x: L ? 60 : 320, y: cy + (i - (n - 1) / 2) * gap, big: id === 'm8' || id === 'm11' }; });
+  const words = (t) => { const w = t.split(' '); if (t.length <= 13) return [t]; const m = Math.ceil(w.length / 2); return [w.slice(0, m).join(' '), w.slice(m).join(' ')]; };
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Mapa mental: vértice no centro e 11 galhos" style="display:block;max-width:460px;margin:0 auto;font-family:Lexend,Arial,sans-serif">
+    ${nodes.map(n => `<path d="M${cx} ${cy} Q${(cx + n.x) / 2 + (n.y - cy) * .15} ${(cy + n.y) / 2 - (n.x - cx) * .15} ${n.x} ${n.y}" fill="none" stroke="${MAPCOL[col[n.k]][1]}" stroke-width="${n.big ? 4 : 2.5}" stroke-linecap="round" opacity=".7"/>`).join('')}
+    <ellipse cx="${cx}" cy="${cy}" rx="70" ry="50" fill="#0B2A4A"/><text x="${cx}" y="${cy - 12}" text-anchor="middle" fill="#F2B544" font-size="15" font-weight="700">VÉRTICE</text>
+    <text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="#fff" font-size="13">V = (x_v, y_v)</text><text x="${cx}" y="${cy + 26}" text-anchor="middle" fill="#9FB4CC" font-size="9.5">onde/quando · quanto</text>
+    ${nodes.map(n => { const [bg, fg] = MAPCOL[col[n.k]]; const L = words(`${n.k + 1}. ${n.t}`); const w = n.big ? bw + 8 : bw, hh = n.big ? bh + 6 : bh;
+      return `<a href="${R}mapa?s=${n.id}"><rect x="${n.x - w / 2}" y="${n.y - hh / 2}" width="${w}" height="${hh}" rx="12" fill="${bg}" stroke="${fg}" stroke-width="${n.big ? 3 : 1.5}"/>
+      ${L.map((s, i) => `<text x="${n.x}" y="${n.y + (i - (L.length - 1) / 2) * 13 + 4}" text-anchor="middle" fill="${fg}" font-size="${n.big ? 12 : 11.5}" font-weight="700">${esc(s)}</text>`).join('')}${n.big ? `<text x="${n.x + w / 2 - 6}" y="${n.y - hh / 2 + 4}" font-size="14" text-anchor="middle">⭐</text>` : ''}</a>`; }).join('')}
+  </svg>`;
+};
+V.mapa = (el) => {
+  EA.ctx.reset({ screen: 'mapa', title: 'Mapa da Lulu', concept: 'vertice' });
+  const S = ST(); S.checklist = S.checklist || {};
+  const P = (id, n, col, title, sub, body) => { const [bg, fg] = MAPCOL[col]; return `<section class="section" id="${id}" style="scroll-margin-top:70px"><div style="border:2px solid ${fg}22;border-radius:18px;overflow:hidden;background:#fff">
+    <div style="background:${bg};padding:12px 14px;display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center"><b style="width:36px;height:36px;border-radius:50%;background:${fg};color:#fff;display:grid;place-items:center;font-size:18px">${n}</b>
+    <div><h2 style="margin:0;color:${fg};font-size:19px;letter-spacing:.3px">${title}</h2>${sub ? `<small style="color:${fg}">${sub}</small>` : ''}</div></div><div style="padding:12px 14px">${body}</div></div></section>`; };
+  const box2 = (a, b) => `<div class="mq-uv">${a}${b}</div>`;
+  const cell = (fg, bg, html) => `<div style="border-color:${fg};background:${bg};text-align:left">${html}</div>`;
+  const ex = (t, lines, plt) => `<div style="border:1px solid #E5E7EB;border-radius:14px;padding:10px;margin-top:10px"><p><b>${t}</b></p><ol class="mq-steps" style="margin:6px 0">${lines.map(l => `<li>${l}</li>`).join('')}</ol>${plt || ''}</div>`;
+  const idx = [['m1', 'Dicas de ouro'], ['m2', 'Onde/quando × quanto'], ['m3', 'Anti-confusão'], ['m4', 'Passo a passo'], ['m5', 'Exemplos'], ['m6', 'Problemas'], ['m7', 'Relações'], ['m8', 'Erros comuns'], ['m9', 'Resumo final'], ['m10', 'Passos de ouro'], ['m11', 'Checklist final']];
+  const done = () => CHECK.filter((_, k) => S.checklist[k]).length;
+  el.append(h(`<div>${STYLE}<p class="eyebrow">Função quadrática · vértice, máximo e mínimo</p><h1 class="screen-title">Mapa da Lulu</h1>
+    <p class="lead">Tudo o que cai na prova, em um lugar só. Refeito a partir dos mapas mentais, conferido com o seu livro (pp. 253–259).</p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">${idx.map(([id, t], k) => `<a href="${R}mapa?s=${id}" class="pin" style="text-decoration:none;color:inherit;${id === 'm8' || id === 'm11' ? 'font-weight:700;border:1.5px solid #C2410C' : ''}">${k + 1}. ${t}</a>`).join('')}</div>
+    <div class="callout" style="display:block"><p><b>Checklist final:</b> <span class="mq-ckc">${done()}</span>/${CHECK.length} · <a href="${R}mapa?s=m11">ir para o checklist →</a></p></div>
+
+    <section class="section" id="m0"><div class="section-h"><h2>🧠 Mapa mental da Lulu</h2><span class="muted">toque num galho</span></div>${mindMap(idx)}</section>
+
+    <section class="section" id="mm"><div class="section-h"><h2>🗺️ Mapas mentais conferidos</h2><span class="muted">toque para ampliar</span></div>
+      <p class="muted" style="margin-bottom:8px">Os seus mapas, conta por conta. Onde havia erro, foi corrigido na própria imagem.</p>
+      <div class="mq-mm" style="display:grid;gap:12px">${MINDMAPS.map(([f, t, ok]) => `<figure style="margin:0;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;background:#fff">
+        <a href="${IMG}${f}.jpg" target="_blank" rel="noopener"><img src="${IMG}${f}.jpg" alt="${esc(t)}" loading="lazy" style="display:block;width:100%;height:auto"></a>
+        <figcaption style="padding:8px 12px"><b>${t}</b><br><small>${ok}</small></figcaption></figure>`).join('')}</div></section>
+
+    ${P('m1', 1, 'yellow', 'DICAS DE OURO DA LULU', 'macetes para responder no automático', `<ul class="mq-steps">
+      <li>🔎 <b>Achou x²?</b> É parábola. Organize em ordem: ax² + bx + c.</li>
+      <li>😊 <b>POSITIVO = U = FUNDO = MÍNIMO</b> &nbsp;·&nbsp; ⛰️ <b>NEGATIVO = ∩ = TOPO = MÁXIMO</b></li>
+      <li>➖ <b>O menos da fórmula encontra o sinal do b:</b> b = −6 → −b = +6.</li>
+      <li>1️⃣ <b>X primeiro, Y depois:</b> ache x_v e substitua: y_v = f(x_v).</li>
+      <li>📍 <b>Vértice = endereço completo:</b> V = (ONDE, QUANTO) = (x_v, y_v).</li>
+      <li>↔️ <b>O vértice mora no meio das raízes:</b> 1 ⟶ <b>3</b> ⟵ 5.</li>
+      <li>🧭 <b>a olha a abertura · Δ olha as raízes.</b> Quem decide máx/mín é o a.</li>
+      <li>0️⃣ <b>Zerou o x? Sobrou o c:</b> corta o eixo y em (0, c).</li>
+      <li>² <b>Potência antes:</b> −2·3² = −2·9 = −18.</li>
+      <li>✏️ <b>Teste do desenho:</b> a &gt; 0 (U) nunca dá máximo; a &lt; 0 (∩) nunca dá mínimo.</li></ul>
+      <a class="btn btn-ghost sm" style="margin-top:8px" href="${R}regras">⚡ Treino-relâmpago “quando ou quanto?”</a>`)}
+
+    ${P('m2', 2, 'blue', 'ONDE/QUANDO × QUANTO', 'o significado de cada coordenada', `<p class="mq-big">V = ( x_v , y_v ) = ( ONDE , QUANTO )</p>
+      ${box2(cell('#0B5FFF', '#EEF4FF', '<b>x_v · ONDE / QUANDO?</b><ul class="mq-steps"><li>Em que valor de x?</li><li>Em que instante?</li><li>Para qual quantidade?</li><li>Em qual posição?</li></ul><p class="mq-big" style="font-size:16px">x_v = −b/(2a)</p>'),
+        cell('#7C3AED', '#F5F0FF', '<b>y_v · QUANTO?</b><ul class="mq-steps"><li>Valor máximo/mínimo?</li><li>Altura máxima?</li><li>Lucro / área máxima?</li><li>Custo mínimo?</li></ul><p class="mq-big" style="font-size:16px">y_v = f(x_v)</p>'))}
+      ${tbl([['A pergunta diz…', 'Procure'], ['quando · em que instante · para qual quantidade', '<b>x_v</b>'], ['altura · lucro · área máxima · custo mínimo', '<b>y_v</b>'], ['ponto de máximo/mínimo · vértice', '<b>V = (x_v, y_v)</b>'], ['onde cruza o eixo x · zeros', '<b>raízes</b>'], ['onde cruza o eixo y', '<b>(0, c)</b>']])}
+      <p style="margin-top:8px"><b>Leitura de V = (3, −4):</b> é <b>em x = 3</b> que acontece o mínimo (onde) e o mínimo <b>vale −4</b> (quanto).</p>`)}
+
+    ${P('m3', 3, 'teal', 'MAPA ANTI-CONFUSÃO', 'cada elemento da parábola tem uma função', `${plot(1, -6, 5, { w: 320, h: 220 })}
+      <p class="muted" style="font-size:13px;margin:4px 0 8px">Linha tracejada = eixo x = x_v · ponto colorido = vértice · pontos brancos = raízes · ponto cinza = (0, c)</p>
+      ${tbl([['Item', 'O que é', 'Como achar'], ['<b>a</b>', 'abertura e tipo de extremo', 'a &gt; 0 U mínimo · a &lt; 0 ∩ máximo'], ['<b>b</b>', 'entra na fórmula do vértice', 'x_v = −b/(2a)'], ['<b>c</b>', 'corte no eixo y', '(0, c)'], ['<b>x_v</b>', 'ONDE/QUANDO ocorre o extremo', '−b/(2a) · eixo x = x_v'], ['<b>y_v</b>', 'QUANTO vale o máx/mín', 'f(x_v) = −Δ/(4a)'], ['<b>V</b>', 'topo ou fundo', '(x_v, y_v) — dois números'], ['<b>Δ</b>', 'quantas raízes reais', 'b² − 4ac'], ['<b>raízes</b>', 'onde y = 0 (eixo x)', 'ax² + bx + c = 0']])}
+      <div class="callout" style="display:block;margin-top:10px;background:var(--color-feedback-error-bg);border-color:var(--color-feedback-error-border)"><p><b>RAIZ × VÉRTICE (não confundir!)</b><br>x² − 6x + 5 → raízes <b>1 e 5</b> (eixo x) · vértice <b>(3, −4)</b> (fundo). Podem existir 0, 1 ou 2 raízes; vértice existe sempre, e é um ponto só.</p></div>`)}
+
+    ${P('m4', 4, 'pink', 'PASSO A PASSO', 'código A → X → Y → V → FRASE', `<ol class="mq-steps">
+      <li><b>Organize</b> na forma ax² + bx + c.</li><li><b>Anote</b> a = __, b = __, c = __ com os sinais.</li>
+      <li><b>A — sinal de a:</b> máximo ou mínimo? (antes de qualquer conta)</li><li><b>X — x_v = −b/(2a)</b></li>
+      <li><b>Y — y_v = f(x_v)</b> (potência antes); confira com −Δ/(4a) se quiser.</li><li><b>V — escreva V = (x_v, y_v)</b></li>
+      <li><b>FRASE:</b> “Como a … , a parábola abre para … ; o valor máximo/mínimo é … e ocorre quando x = …”</li></ol>
+      ${card('<p><b>Modelo (livro, p. 259):</b> f(x) = x² − 6x + 5 → a = 1, b = −6, c = 5 · a &gt; 0 → mínimo · x_v = −(−6)/2 = 3 · y_v = f(3) = 9 − 18 + 5 = −4 · <b>V = (3, −4)</b> → “O valor mínimo é −4 e ocorre quando x = 3.”</p>')}
+      <a class="btn btn-ghost sm" style="margin-top:8px" href="${R}aula">Praticar na aula guiada →</a>`)}
+
+    ${P('m5', 5, 'green', 'EXEMPLOS RESOLVIDOS', 'do mais simples ao mais completo', `
+      ${ex('A · Mínimo (livro, p. 259) · f(x) = x² − 6x + 5', ['a = 1 &gt; 0 → mínimo', 'x_v = −(−6)/(2·1) = 3', 'y_v = f(3) = 9 − 18 + 5 = −4', '<b>V = (3, −4)</b> · mínimo −4 quando x = 3'], plot(1, -6, 5, { w: 300, h: 180 }))}
+      ${ex('B · Máximo · g(x) = −2x² + 8x + 3', ['a = −2 &lt; 0 → máximo', 'x_v = −8/(2·(−2)) = 2', 'y_v = g(2) = −2·4 + 16 + 3 = 11', '<b>V = (2, 11)</b> · máximo 11 quando x = 2'], plot(-2, 8, 3, { w: 300, h: 180 }))}
+      ${ex('C · Vértice completo · f(x) = x² − 4x + 7', ['a = 1 &gt; 0 → mínimo', 'x_v = −(−4)/2 = 2', 'y_v = f(2) = 4 − 8 + 7 = 3', '<b>V = (2, 3)</b> · mínimo 3'])}
+      ${ex('D · Máximo · g(x) = −x² + 10x − 21', ['a = −1 &lt; 0 → máximo', 'x_v = −10/(2·(−1)) = 5', 'y_v = g(5) = −25 + 50 − 21 = 4', '<b>V = (5, 4)</b> · máximo 4'])}
+      ${ex('E · Pelas raízes · f(x) = x² − 4x + 3', ['raízes 1 e 3 → x_v = (1 + 3)/2 = 2', 'y_v = f(2) = 4 − 8 + 3 = −1', '<b>V = (2, −1)</b> · mínimo −1', 'tabela: x = 0 → 3 · 1 → 0 · 2 → −1 · 3 → 0 · 4 → 3'], plot(1, -4, 3, { w: 300, h: 180 }))}
+      ${ex('F · Forma canônica · h(x) = 4(x + 2)² − 3', ['x + 2 = x − (−2) → h = −2, k = −3', '<b>V = (−2, −3)</b>', 'a = 4 &gt; 0 → mínimo −3'])}`)}
+
+    ${P('m6', 6, 'orange', 'SITUAÇÕES-PROBLEMA', 'do enunciado ao resultado', `<ol class="mq-steps"><li><b>Entenda:</b> o que a função representa? A pergunta quer QUANDO (x_v) ou QUANTO (y_v)?</li><li><b>Modele:</b> a, b, c com sinais.</li><li><b>Resolva:</b> x_v e y_v.</li><li><b>Interprete:</b> frase + unidade.</li></ol>
+      ${ex('Bola · h(t) = −5t² + 20t + 2 (m, s)', ['a = −5 &lt; 0 → máximo', 'QUANDO: t_v = −20/(2·(−5)) = <b>2 s</b>', 'QUANTO: h(2) = −20 + 40 + 2 = <b>22 m</b>', '“A bola atinge a altura máxima de 22 m após 2 s.”'], plot(-5, 20, 2, { w: 300, h: 180, roots: false }))}
+      ${ex('Área · A(x) = x(20 − x) = −x² + 20x (m)', ['a = −1 &lt; 0 → máximo', 'x_v = −20/(2·(−1)) = 10 → lados 10 m e 20 − 10 = 10 m', 'A(10) = <b>100 m²</b>'])}
+      ${ex('Lucro · L(x) = −x² + 20x − 64', ['a = −1 &lt; 0 → máximo', 'QUANTOS: x_v = 10', 'QUANTO: L(10) = −100 + 200 − 64 = <b>36</b>', '“O lucro máximo é 36, vendendo 10 unidades.”'])}
+      ${ex('📘 Livro, p. 255 · Custo C(x) = −9x² + 1.800x (reais, x em toneladas)', ['a = −9 &lt; 0 → máximo', 'x_v = −1.800/(2·(−9)) = <b>100 t</b>', 'C(100) = −90.000 + 180.000 = <b>R$ 90.000</b>', 'Atenção: 100 é a produção (quando); 90.000 é o custo (quanto).'])}`)}
+
+    ${P('m7', 7, 'purple', 'RELAÇÕES IMPORTANTES', 'o que liga uma coisa à outra', `${tbl([['Relação', 'Fórmula / regra'], ['Eixo de simetria', 'x = x_v'], ['Duas raízes reais', 'x_v = (x₁ + x₂)/2'], ['Ordenada do vértice', 'y_v = f(x_v) = −Δ/(4a)'], ['Discriminante', 'Δ = b² − 4ac: Δ &gt; 0 duas raízes · Δ = 0 uma (tangente) · Δ &lt; 0 nenhuma'], ['Corte no eixo y', '(0, c)'], ['Forma do vértice (canônica)', 'y = a(x − h)² + k → V = (h, k)'], ['Forma fatorada', 'y = a(x − x₁)(x − x₂) → raízes x₁ e x₂'], ['Imagem', 'a &gt; 0: y ≥ y_v · a &lt; 0: y ≤ y_v'], ['Crescimento', 'a &gt; 0: decresce até x_v e cresce depois · a &lt; 0: cresce até x_v e decresce depois'], ['Ponto simétrico', '(0, c) tem simétrico (2x_v, c)']])}
+      <p class="muted" style="margin-top:6px">Todas as formas representam a MESMA parábola; o gráfico não muda.</p>`)}
+
+    ${P('m8', 8, 'red', 'ERROS MAIS COMUNS', 'alta performance: veja o erro, o certo e treine na hora', `<p>Em vermelho, o que acontece na prova. Em verde, o certo. Os números mostram quantas vezes <b>você</b> já errou cada um aqui no app.</p>
+      <div class="mq-err" style="margin-top:8px">${ERRMAP.map((e, k) => { const n = e.code ? (S.errtypes || {})[e.code] || 0 : 0; return `<div style="border:1.5px solid ${n ? '#B91C1C' : '#E5E7EB'};border-radius:14px;padding:10px">
+        <p style="display:flex;justify-content:space-between;gap:8px"><b>${k + 1}. ${e.t}</b>${n ? `<span style="color:#B91C1C;font-weight:700;white-space:nowrap">você: ${n}×</span>` : ''}</p>
+        <p style="margin-top:6px;background:#FDE8E8;border-radius:10px;padding:6px 8px">✗ ${e.bad}</p><p style="margin-top:4px;background:#E5F7EC;border-radius:10px;padding:6px 8px">✓ ${e.good}</p>
+        <p style="margin-top:6px">💡 <b>Macete:</b> ${e.mac}</p>${e.code && Q.some(q => q.k === e.code) ? `<button class="btn btn-ghost sm mq-tr" data-k="${e.code}" style="margin-top:6px">Treinar este erro (3 questões)</button><div class="mq-trq"></div>` : ''}</div>`; }).join('')}</div>`)}
+
+    ${P('m9', 9, 'yellow', 'RESUMO FINAL PARA FIXAR', '', `<ul class="mq-steps" style="font-size:16px">
+      <li>✅ y = ax² + bx + c, com a ≠ 0</li><li>✅ a &gt; 0 → abre para cima → <b>mínimo</b> · imagem y ≥ y_v</li><li>✅ a &lt; 0 → abre para baixo → <b>máximo</b> · imagem y ≤ y_v</li>
+      <li>✅ Δ = b² − 4ac (número de raízes, não decide máx/mín)</li><li>✅ x_v = −b/(2a) · eixo de simetria x = x_v</li><li>✅ y_v = f(x_v) = −Δ/(4a)</li>
+      <li>✅ V = (x_v, y_v) é o vértice: sempre dois números</li><li>✅ Interseção com o eixo y: (0, c)</li><li>✅ Interseção com o eixo x: raízes de ax² + bx + c = 0</li>
+      <li>✅ Duas raízes: x_v = (x₁ + x₂)/2</li><li>✅ a(x − h)² + k → V = (h, k)</li><li>✅ x_v = QUANDO · y_v = QUANTO</li></ul>${sayBtn('Resumo final. a positivo: mínimo. a negativo: máximo. x v igual a menos b sobre dois a. y v igual a f de x v. O vértice tem sempre dois números. x v é quando, y v é quanto.')}`)}
+
+    ${P('m10', 10, 'blue', 'PASSOS DE OURO DO ESTUDO', 'como estudar hoje (e como resolver cada questão)', `<ol class="mq-steps"><li>Identifique a, b e c.</li><li>Veja o sinal de a (máximo ou mínimo).</li><li>Calcule x_v.</li><li>Calcule y_v.</li><li>Escreva o vértice completo.</li><li>Interprete o resultado.</li><li>Verifique no gráfico (teste do desenho).</li></ol>
+      ${tbl([['Hoje', 'Tempo', 'Onde'], ['Aula guiada', '20 min', `<a href="${R}aula">abrir</a>`], ['Treino (fácil → médio)', '15 min', `<a href="${R}treino">abrir</a>`], ['Erros mais comuns', '10 min', `<a href="${R}mapa?s=m8">abrir</a>`], ['Simulado', '15 min', `<a href="${R}simulado">abrir</a>`], ['Checklist final', '5 min', `<a href="${R}mapa?s=m11">abrir</a>`]])}
+      <p class="muted" style="margin-top:6px">Sessão curta e ativa vale mais que leitura longa. Amanhã cedo: só o resumo final e o checklist — nada de matéria nova. Dormir bem fixa o que você estudou.</p>`)}
+
+    ${P('m11', 11, 'green', 'CHECKLIST FINAL DA LULU', 'marque só quando conseguir sozinha · fica salvo neste aparelho', `<div class="q-bar" style="margin-bottom:10px"><i class="mq-ckbar" style="width:${Math.round(done() / CHECK.length * 100)}%"></i></div>
+      <div class="mq-ck" style="display:grid;gap:8px">${CHECK.map(([t, href], k) => `<label style="display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:10px;border-radius:14px;border:1.5px solid ${S.checklist[k] ? '#1F8A5B' : '#E5E7EB'};background:${S.checklist[k] ? '#E5F7EC' : '#fff'}">
+        <input type="checkbox" data-c="${k}" ${S.checklist[k] ? 'checked' : ''} style="width:24px;height:24px;accent-color:#1F8A5B" aria-label="${esc(t)}"><span>${t}</span><a href="${R}${href}" class="muted" style="font-size:13px;white-space:nowrap">testar</a></label>`).join('')}</div>
+      <div class="mq-ckmsg" style="margin-top:10px"></div>`)}
+  </div>`));
+  // checklist interativo (persistido por perfil+caderno)
+  const paintCk = () => { const d = done(), pct = Math.round(d / CHECK.length * 100); $('.mq-ckbar', el).style.width = pct + '%'; $('.mq-ckc', el).textContent = d;
+    $('.mq-ckmsg', el).innerHTML = d === CHECK.length ? '<div class="remind good"><div class="h">🏆 Pronta para a prova!</div><p>Amanhã: respire, faça A → X → Y → V → FRASE em cada questão e o teste do desenho antes de entregar.</p></div>' : `<p class="muted">${d}/${CHECK.length} — faltam ${CHECK.length - d}. Use “testar” para conferir antes de marcar.</p>`; };
+  $$('[data-c]', el).forEach(c => c.onchange = () => { S.checklist[c.dataset.c] = c.checked ? 1 : 0; EA.save(); fx[c.checked ? 'ok' : 'tap'](); const lb = c.closest('label'); lb.style.borderColor = c.checked ? '#1F8A5B' : '#E5E7EB'; lb.style.background = c.checked ? '#E5F7EC' : '#fff'; if (done() === CHECK.length) fx.done(); paintCk(); });
+  paintCk();
+  // treino dirigido por erro (3 questões daquele tipo, as ainda não acertadas primeiro)
+  $$('.mq-tr', el).forEach(b => b.onclick = () => { fx.tap(); const k = b.dataset.k; const pool = Q.filter(q => q.k === k); const qs = shuffle(pool.filter(q => !S.correct[q.id])).concat(shuffle(pool.filter(q => S.correct[q.id]))).slice(0, 3);
+    b.hidden = true; EA.Quiz(b.nextElementSibling, qs, { label: 'Treino do erro' }); });
+  scrollTo();
+};
+
 /* REGRAS DE OURO — reflexos para a prova (complemento). Código A → X → Y → V → FRASE + caça-palavras + protocolo de 10 s. */
 const KEYS = [
   ['Depois de quantos segundos a bola atinge a altura máxima?', 'xv'], ['Qual é a altura máxima?', 'yv'], ['Para qual quantidade o lucro é máximo?', 'xv'],
@@ -684,10 +839,7 @@ V.regras = (el) => {
       <ol class="mq-steps"><li>Identifiquei a, b, c com os sinais?</li><li>Olhei o sinal de a?</li><li>Sei se é máximo ou mínimo?</li><li>Calculei x_v?</li><li>Calculei y_v?</li><li>Se pediram vértice, escrevi (x_v, y_v)?</li><li>Respondi exatamente o que a questão perguntou?</li><li><b>Minha resposta faz sentido no desenho?</b></li></ol></section>
     <section class="section"><div class="section-h"><h2>Se só 6 frases ficarem na cabeça</h2>${sayBtn('a maior que zero: U, mínimo. a menor que zero: montanha, máximo. x v: onde ou quando. y v: quanto. Vértice: x v vírgula y v. Raiz é eixo x; vértice é topo ou fundo.')}</div>
       ${card('<ol class="mq-steps" style="font-size:17px"><li>a &gt; 0: U, mínimo.</li><li>a &lt; 0: ∩, máximo.</li><li>x_v: ONDE ou QUANDO.</li><li>y_v: QUANTO.</li><li>Vértice: V = (x_v, y_v).</li><li>Raiz é eixo x; vértice é topo ou fundo.</li></ol>')}</section>
-    <section class="section"><div class="section-h"><h2>Mapas mentais</h2><span class="muted">toque para ampliar</span></div>
-      <div style="display:grid;gap:10px">${[['mapa-geral.jpg', 'Mapa geral da função quadrática'], ['mapa-vertice-formas.jpg', 'Vértice, máximo, mínimo e formas da função'], ['mapa-vertice-grafico-erros.jpg', 'Vértice, gráfico, situações-problema e erros comuns']]
-        .map(([f, t]) => `<a href="../img/lulu/${f}" target="_blank" rel="noopener" style="display:block;border:1px solid var(--color-border-subtle,#E5E7EB);border-radius:14px;overflow:hidden;background:#fff;text-decoration:none;color:inherit"><img src="../img/lulu/${f}" alt="${t}" loading="lazy" decoding="async" style="width:100%;height:auto;display:block"><span style="display:block;padding:8px 12px;font-size:14px">${t} · abrir em tela cheia</span></a>`).join('')}</div>
-      <p class="muted" style="margin-top:6px">Mapas conferidos (contas e exemplos batem com o livro e com o app).</p></section>
+    <a class="btn btn-primary" style="margin-top:14px" href="${R}mapa">Abrir o Mapa da Lulu →</a>
   </div>`));
   // caça-palavras: recuperação rápida, embaralhado, feedback imediato
   const box = $('.mq-kw', el); const items = shuffle(KEYS).slice(0, 8); let j = 0, hits = 0;
@@ -805,7 +957,7 @@ EA.registerPack({
   error_types: ERR,
   tutor_context: 'Caderno de Matemática (1ª série do EM) sobre função quadrática, com prioridade no vértice da parábola: concavidade (a > 0 mínimo, a < 0 máximo), x_v = −b/(2a), y_v = −Δ/(4a) = f(x_v), V = (x_v, y_v) e interpretação de x_v (quando/onde) × y_v (qual valor).',
   topics: TOPICS, badges: BADGES, questions: Q, concepts: CONCEPTS,
-  tabs: [['home', 'book', 'Caderno'], ['parabola', 'waves', 'Parábola'], ['vertice', 'target', 'Vértice'], ['grafico', 'compass', 'Gráfico'], ['problemas', 'bulb', 'Problemas'], ['treino', 'pencilList', 'Treino']],
+  tabs: [['home', 'book', 'Caderno'], ['mapa', 'layers', 'Mapa'], ['vertice', 'target', 'Vértice'], ['grafico', 'compass', 'Gráfico'], ['treino', 'pencilList', 'Treino'], ['problemas', 'bulb', 'Problemas']],
   screens: V,
 });
 })();
