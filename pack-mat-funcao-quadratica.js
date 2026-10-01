@@ -300,9 +300,10 @@ V.home = (el) => {
     </section>
     <div class="mastery"><div class="ring" style="--p:${m.all}"><div>${m.all}%</div></div>
       <p><strong>Domínio geral</strong>Cada acerto e cada treino enchem o círculo.</p></div>
-    ${card(`<p class="eyebrow">Prova amanhã? Hoje à noite (~60 min)</p><ol class="mq-steps"><li><a href="${R}aula"><b>Aula guiada</b></a> · 20 min</li><li><a href="${R}treino">Treino médio</a> · 15 min</li><li><a href="${R}diagnostico">Diagnóstico</a> ou <a href="${R}simulado">Simulado</a> · 15 min</li><li><a href="${R}revisao">Revisar só o que errou</a> · 10 min</li></ol><p class="muted">Amanhã cedo: só o <a href="${R}plano">cartão de memória</a> (5 min). Nada de matéria nova. Dormir bem fixa o que você estudou.</p>`, 'margin:14px 0')}
+    ${card(`<p class="eyebrow">Prova amanhã? Hoje à noite (~60 min)</p><ol class="mq-steps"><li><a href="${R}aula"><b>Aula guiada</b></a> · 20 min</li><li><a href="${R}treino">Treino médio</a> · 15 min</li><li><a href="${R}diagnostico">Diagnóstico</a> ou <a href="${R}simulado">Simulado</a> · 15 min</li><li><a href="${R}revisao">Revisar só o que errou</a> · 10 min</li><li><a href="${R}regras">Regras de ouro</a> · ⚡ “Quando ou quanto?” · 5 min</li></ol><p class="muted">Amanhã cedo: só as <a href="${R}regras">6 frases e o código A→X→Y→V→FRASE</a> (5 min). Nada de matéria nova. Dormir bem fixa o que você estudou.</p>`, 'margin:14px 0')}
     <div class="cta-grid">
       <a class="btn btn-primary" href="${R}aula">${EA.icon('play', 20)} Aula guiada do vértice · comece aqui</a>
+      <a class="btn btn-brand" href="${R}regras">${EA.icon('flame', 20)} Regras de ouro · código A→X→Y→V · mapas</a>
       <a class="btn btn-ghost" href="${R}vertice">${EA.icon('target', 20)} Teoria do vértice</a>
       <div class="btn-row">
         <a class="btn btn-ghost" href="${R}revisao"><i>${EA.icon('review', 24)}</i>Revisão inteligente</a>
@@ -644,6 +645,65 @@ V.aula = (el) => {
     } });
   }
   go();
+};
+
+/* REGRAS DE OURO — reflexos para a prova (complemento). Código A → X → Y → V → FRASE + caça-palavras + protocolo de 10 s. */
+const KEYS = [
+  ['Depois de quantos segundos a bola atinge a altura máxima?', 'xv'], ['Qual é a altura máxima?', 'yv'], ['Para qual quantidade o lucro é máximo?', 'xv'],
+  ['Qual é o lucro máximo?', 'yv'], ['Qual é a área máxima?', 'yv'], ['Em que instante o objeto está mais alto?', 'xv'], ['Qual é o custo mínimo?', 'yv'],
+  ['Determine o ponto de máximo da função.', 'V'], ['Onde a parábola corta o eixo x?', 'raiz'], ['Onde a parábola corta o eixo y?', 'c'],
+  ['Para qual valor de x a função atinge o mínimo?', 'xv'], ['Qual é o valor mínimo da função?', 'yv'], ['Quais são os zeros da função?', 'raiz'], ['Quais são as coordenadas do vértice?', 'V'],
+];
+const KEYLBL = { xv: 'x_v (quando/onde)', yv: 'y_v (quanto)', V: 'V = (x_v, y_v)', raiz: 'raízes (y = 0)', c: '(0, c)' };
+V.regras = (el) => {
+  EA.ctx.reset({ screen: 'regras', title: 'Regras de ouro', concept: 'vertice' });
+  const rule = (n, t, body, sayTxt) => `<div class="callout" style="display:block;margin-top:10px"><div class="mq-row" style="justify-content:space-between"><p><b>REGRA ${n}</b> · ${t}</p>${sayTxt ? sayBtn(sayTxt, 'sm') : ''}</div>${body}</div>`;
+  el.append(h(`<div>${STYLE}<p class="eyebrow">Reflexos para a prova</p><h1 class="screen-title">Regras de ouro</h1><div style="margin:6px 0">${SRC_EXTRA}</div>
+    <p class="lead">Não é para decorar o capítulo. É para responder no automático, com menos decisões na hora da prova.</p>
+    <section class="section"><div class="section-h"><h2>O código: A → X → Y → V → FRASE</h2>${sayBtn('Código: A, olhe o a, máximo ou mínimo. X, calcule x v igual a menos b sobre dois a. Y, calcule y v igual a f de x v. V, monte o vértice x v vírgula y v. Frase, explique o resultado.')}</div>
+      <div class="mq-trail">${[['A', 'Veja o <b>a</b>', 'a &gt; 0 → U → mínimo · a &lt; 0 → ∩ → máximo'], ['X', 'Encontre <b>x_v</b>', 'x_v = −b/(2a)'], ['Y', 'Encontre <b>y_v</b>', 'y_v = f(x_v) — substitua na própria função'], ['V', 'Monte o <b>vértice</b>', 'V = (x_v, y_v) — sempre dois números'], ['FRASE', 'Explique', '“Como a &gt; 0, abre para cima; V = (3, −4) é mínimo: o valor mínimo é −4, quando x = 3.”']]
+        .map(([l, t, s]) => `<div style="display:grid;grid-template-columns:62px 1fr;gap:8px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--color-surface-raised,#fff);border:1px solid var(--color-border-subtle,#E5E7EB)"><b style="font-size:${l.length > 1 ? 14 : 26}px;text-align:center;color:var(--color-brand-primary,#0B5FFF)">${l}</b><span>${t}<br><small>${s}</small></span></div>`).join('')}</div></section>
+    <section class="section"><div class="section-h"><h2>⚡ Quando ou quanto?</h2><span class="muted">treino-relâmpago</span></div>
+      <p>Leia a pergunta e escolha o que ela pede. Não precisa calcular.</p><div class="mq-kw" style="margin-top:8px"></div></section>
+    <section class="section"><div class="section-h"><h2>As 12 regras</h2></div>
+      ${rule(1, 'Achou x²? Alerta da parábola', '<p>Tem x² (e a ≠ 0) → é quadrática → o gráfico é parábola. Termos fora de ordem? Organize: 5 + 3x − 2x² → −2x² + 3x + 5 → a = −2, b = 3, c = 5.</p>')}
+      ${rule(2, 'O a é o chefe', '<p><b>POSITIVO = U = FUNDO = MÍNIMO</b> (tigela) · <b>NEGATIVO = ∩ = TOPO = MÁXIMO</b> (montanha). Responda máximo/mínimo antes de qualquer conta.</p>', 'Positivo é U, fundo, mínimo. Negativo é montanha, topo, máximo.')}
+      ${rule(3, 'Vértice sempre tem dois números', '<p>Nunca “o vértice é 3”. Vértice = endereço completo: <b>V = (ONDE, QUANTO) = (x_v, y_v)</b>.</p>')}
+      ${rule(4, 'x_v responde QUANDO / ONDE', '<p>Quando? Onde? Em qual quantidade? Para qual x? → <b>x_v = −b/(2a)</b>. Macete: X = localização.</p>')}
+      ${rule(5, 'y_v responde QUANTO', '<p>Altura máxima, lucro máximo, área máxima, custo mínimo → <b>y_v = f(x_v)</b>.</p>')}
+      ${rule(6, 'X primeiro, Y depois', '<p>Ache x_v e substitua na própria função. Só depois, se quiser, confira com −Δ/(4a).</p>')}
+      ${rule(7, 'O menos da fórmula não é do b', '<p>Escreva antes a = __, b = __, c = __ com sinais. Se b = −6: −b = −(−6) = +6 → x_v = 6/2 = 3. “O menos da fórmula encontra o sinal do b.”</p>', 'O menos da fórmula encontra o sinal do b. Se b é menos seis, menos b é mais seis.')}
+      ${rule(8, 'Raiz não é vértice', '<p>Raízes: onde y = 0 (cruza o eixo x). Vértice: o topo ou o fundo. Em x² − 6x + 5 (livro): raízes 1 e 5; vértice (3, −4).</p>')}
+      ${rule(9, 'Atalho das raízes', '<p>O vértice mora no meio das raízes: x_v = (x₁ + x₂)/2 → 1 ⟶ <b>3</b> ⟵ 5.</p>')}
+      ${rule(10, 'O Δ não manda no máximo/mínimo', '<p><b>a olha a ABERTURA · Δ olha as RAÍZES.</b> Δ &gt; 0 duas · Δ = 0 uma · Δ &lt; 0 nenhuma.</p>')}
+      ${rule(11, 'O c tem endereço fácil', '<p>Zerou o x? Sobrou o c → a parábola corta o eixo y em <b>(0, c)</b>.</p>')}
+      ${rule(12, 'Teste do desenho', '<p>Antes de entregar, imagine a parábola: se a &gt; 0 (U), o vértice não pode ser máximo; se a &lt; 0 (∩), não pode ser mínimo.</p>')}</section>
+    <section class="section"><div class="section-h"><h2>Problema sem susto</h2></div>
+      ${card('<p>h(t) = −5t² + 20t + 2 · <b>A:</b> a = −5 → ∩ → máximo · <b>X:</b> t_v = −20/(2·(−5)) = 2 → <b>quando? 2 s</b> · <b>Y:</b> h(2) = −20 + 40 + 2 = 22 → <b>quanto? 22 m</b> · <b>FRASE:</b> a bola atinge a altura máxima de 22 m após 2 segundos.</p>')}</section>
+    <section class="section"><div class="section-h"><h2>Protocolo de 10 segundos antes de entregar</h2></div>
+      <ol class="mq-steps"><li>Identifiquei a, b, c com os sinais?</li><li>Olhei o sinal de a?</li><li>Sei se é máximo ou mínimo?</li><li>Calculei x_v?</li><li>Calculei y_v?</li><li>Se pediram vértice, escrevi (x_v, y_v)?</li><li>Respondi exatamente o que a questão perguntou?</li><li><b>Minha resposta faz sentido no desenho?</b></li></ol></section>
+    <section class="section"><div class="section-h"><h2>Se só 6 frases ficarem na cabeça</h2>${sayBtn('a maior que zero: U, mínimo. a menor que zero: montanha, máximo. x v: onde ou quando. y v: quanto. Vértice: x v vírgula y v. Raiz é eixo x; vértice é topo ou fundo.')}</div>
+      ${card('<ol class="mq-steps" style="font-size:17px"><li>a &gt; 0: U, mínimo.</li><li>a &lt; 0: ∩, máximo.</li><li>x_v: ONDE ou QUANDO.</li><li>y_v: QUANTO.</li><li>Vértice: V = (x_v, y_v).</li><li>Raiz é eixo x; vértice é topo ou fundo.</li></ol>')}</section>
+    <section class="section"><div class="section-h"><h2>Mapas mentais</h2><span class="muted">toque para ampliar</span></div>
+      <div style="display:grid;gap:10px">${[['mapa-geral.jpg', 'Mapa geral da função quadrática'], ['mapa-vertice-formas.jpg', 'Vértice, máximo, mínimo e formas da função'], ['mapa-vertice-grafico-erros.jpg', 'Vértice, gráfico, situações-problema e erros comuns']]
+        .map(([f, t]) => `<a href="../img/lulu/${f}" target="_blank" rel="noopener" style="display:block;border:1px solid var(--color-border-subtle,#E5E7EB);border-radius:14px;overflow:hidden;background:#fff;text-decoration:none;color:inherit"><img src="../img/lulu/${f}" alt="${t}" loading="lazy" decoding="async" style="width:100%;height:auto;display:block"><span style="display:block;padding:8px 12px;font-size:14px">${t} · abrir em tela cheia</span></a>`).join('')}</div>
+      <p class="muted" style="margin-top:6px">Mapas conferidos (contas e exemplos batem com o livro e com o app).</p></section>
+  </div>`));
+  // caça-palavras: recuperação rápida, embaralhado, feedback imediato
+  const box = $('.mq-kw', el); const items = shuffle(KEYS).slice(0, 8); let j = 0, hits = 0;
+  const draw = () => {
+    if (j >= items.length) { box.innerHTML = `<div class="remind ${hits >= 7 ? 'good' : 'fix'}"><div class="h">${hits}/${items.length} certas</div><p>${hits >= 7 ? 'Reflexo pronto: QUANDO → x_v · QUANTO → y_v.' : 'Repita mais uma rodada: o objetivo é responder sem pensar.'}</p></div><button class="btn btn-dark mq-kwa" style="margin-top:8px">Outra rodada</button>`; $('.mq-kwa', box).onclick = () => { fx.tap(); j = 0; hits = 0; items.splice(0, items.length, ...shuffle(KEYS).slice(0, 8)); draw(); }; return; }
+    const [q, ans] = items[j];
+    box.innerHTML = `<div class="q-card"><p class="q-meta"><span>Quando ou quanto?</span><span>${j + 1}/${items.length}</span></p><p class="q-prompt">${q}</p>
+      <div class="q-opts">${Object.entries(KEYLBL).map(([k, l]) => `<button class="q-opt" data-k="${k}"><span class="l">•</span>${l}</button>`).join('')}</div><div class="q-fb"></div></div>`;
+    $$('[data-k]', box).forEach(b => b.onclick = () => {
+      const ok = b.dataset.k === ans; if (ok) hits++; else { const S = ST(); S.errtypes = S.errtypes || {}; const code = (ans === 'raiz' || b.dataset.k === 'raiz') ? 'ROOT_VS_VERTEX_CONFUSION' : ans === 'V' ? 'VERTEX_INCOMPLETE' : 'XV_YV_INTERPRETATION'; S.errtypes[code] = (S.errtypes[code] || 0) + 1; EA.save(); }
+      fx[ok ? 'ok' : 'err'](); $$('[data-k]', box).forEach(x => { x.disabled = true; if (x.dataset.k === ans) x.classList.add('right'); }); if (!ok) b.classList.add('wrong');
+      $('.q-fb', box).innerHTML = `<p style="margin-top:8px">${ok ? '✓ ' : ''}Pede <b>${KEYLBL[ans]}</b>.</p><button class="btn btn-dark q-next" style="margin-top:8px">Próxima →</button>`;
+      $('.q-next', box).onclick = () => { fx.tap(); j++; draw(); };
+    });
+  };
+  draw();
 };
 
 /* Plano personalizado da Lulu (complemento autoral, alinhado ao livro pp. 253–259). */
