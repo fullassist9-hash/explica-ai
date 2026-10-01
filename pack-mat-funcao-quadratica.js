@@ -1058,6 +1058,10 @@ V.folha = (el) => {
   $('.fz-print', el).onclick = () => { fx.tap(); window.print(); };
 };
 
+/* Voz gravada da Lulu: ativar (AUDIO = '../audio/lulu/') só quando os áudios aprovados forem publicados. Sem isso, usa a voz do aparelho. */
+const AUDIO = null;
+if (AUDIO) EA.loadAudio(AUDIO);
+
 /* Offline: pede ao service worker para guardar os mapas e a capa (só nesta entrada). */
 const OFFLINE_ASSETS = ['../img/mat-parabola.svg', ...MINDMAPS.map(([f]) => IMG + f + '.jpg')];
 if ('serviceWorker' in navigator) navigator.serviceWorker.ready.then(reg => reg.active && reg.active.postMessage({ type: 'precache', urls: OFFLINE_ASSETS.map(u => new URL(u, location.href).href) })).catch(() => {});
