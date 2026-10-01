@@ -955,9 +955,15 @@ V.voz = (el) => {
   el.append(h(`<div>${STYLE}<p class="eyebrow">Ajuste</p><h1 class="screen-title">Voz do app</h1>
     <p class="lead">Cada celular tem vozes diferentes. Teste e escolha a que soa mais natural para você. As marcadas ★ são as mais humanas.</p>
     <div class="callout" style="display:block;margin:12px 0"><p><b>Velocidade</b></p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">${[[0.95, 'Calma'], [1.05, 'Normal'], [1.18, 'Rápida']].map(([r, t]) => `<button class="btn btn-ghost sm vz-r" data-r="${r}" style="min-height:44px">${t}</button>`).join('')}</div></div>
+    <div class="callout" style="display:block;margin:0 0 12px;border-color:#1F8A5B;background:#E5F7EC"><p><b>🎙️ Voz gravada da Lulu</b> — voz neural feminina, a mesma em qualquer celular, funciona sem internet depois de ouvir uma vez.</p>
+      <label style="display:flex;align-items:center;gap:10px;margin-top:8px;min-height:44px"><input type="checkbox" class="vz-rec" ${EA.settings.recorded !== false ? 'checked' : ''} style="width:24px;height:24px"> Usar a voz gravada (recomendado)</label>
+      <button class="btn btn-primary sm vz-test" style="margin-top:6px;min-height:44px">▶ Ouvir a voz gravada</button></div>
+    <p class="muted" style="margin:0 0 8px">Vozes do próprio celular (usadas só onde não há áudio gravado, como nas conversas com o tutor):</p>
     <div class="vz-list" style="display:grid;gap:8px"></div>
     <p class="muted" style="margin-top:12px;font-size:14px">Não achou uma voz boa? No Android: Configurações → Acessibilidade → Saída de texto para fala → <b>Mecanismo do Google</b> → instalar “Português (Brasil)” de alta qualidade. No iPhone: Ajustes → Acessibilidade → Conteúdo Falado → Vozes → Português (Brasil) → baixar uma voz <b>Aprimorada</b> ou <b>Premium</b>. Depois volte aqui.</p>
     <a class="btn btn-primary" style="margin:14px 0 110px;min-height:48px" href="${R}home">Pronto</a></div>`));
+  $('.vz-rec', el).onchange = (e) => { EA.settings.recorded = e.target.checked; EA.saveSettings(); };
+  $('.vz-test', el).onclick = (e) => { say('Resumo final. a positivo: mínimo. a negativo: máximo. x v igual a menos b sobre dois a. y v igual a f de x v. O vértice tem sempre dois números. x v é quando, y v é quanto.', e.currentTarget); };
   const paintR = () => $$('.vz-r', el).forEach(b => { const on = Math.abs((EA.settings.voiceRate || 1.05) - +b.dataset.r) < .01; b.classList.toggle('btn-primary', on); b.classList.toggle('btn-ghost', !on); b.setAttribute('aria-pressed', on); });
   $$('.vz-r', el).forEach(b => b.onclick = () => { EA.settings.voiceRate = +b.dataset.r; EA.saveSettings(); paintR(); say(SAMPLE); }); paintR();
   const paint = () => { const vs = EA.voiceList(), cur = EA.settings.voiceName || (vs[0] && vs[0].name), box = $('.vz-list', el); if (!box) return;
@@ -1059,7 +1065,7 @@ V.folha = (el) => {
 };
 
 /* Voz gravada da Lulu: ativar (AUDIO = '../audio/lulu/') só quando os áudios aprovados forem publicados. Sem isso, usa a voz do aparelho. */
-const AUDIO = null;
+const AUDIO = '../audio/lulu/';
 if (AUDIO) EA.loadAudio(AUDIO);
 
 /* Offline: pede ao service worker para guardar os mapas e a capa (só nesta entrada). */
