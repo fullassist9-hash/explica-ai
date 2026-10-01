@@ -13,6 +13,8 @@ const INTENTS = [
   ['nav',     /\b(volta|voltar|abre|abrir|ir) (pra|para|pro|ao|a|o)\b.*\b(geografia|historia|matematica|ciencias|portugues|ingles|caderno)\b/],
   ['private', /\b(qual|que)\b.*\b(meu time|minha geracao|minha nota|minhas notas|materia (favorita|preferida)|meu clube)\b|\b(proxima prova|minha prova|ja caiu numa prova|boletim)\b|\b(clube|time)\b.*\b(jogava|joguei|jogo)\b/],
   ['noFootball', /\bsem futebol\b|\bnao (use|usa|quero) futebol\b/],
+  ['reviewWrong', /\b(revisar|revisao|refazer|treinar|rever)\b.*\b(errei|erros|errado|errados|erradas)\b/],
+  ['harder', /\b(um|uma|outro|outra|agora|quero|me da)\b.*\bmais (dificil|desafiador)\b|\b(exercicio|questao|nivel) (mais )?dificil\b/],
   ['meta',    /\b(qual (e a |e o )?(materia|assunto|caderno|conteudo)|que (materia|assunto|caderno)|o que (eu )?(estou|to|tou) estudando|estou estudando o que)\b/],
   ['whoami',  /\b(quem (sou|e) eu|meu perfil|pra quem voce)\b/],
   ['speak',   /\b(fala|fale|falar|le pra mim|leia|ler|ouvir|em voz alta|narra|narre)\b/],
@@ -22,7 +24,7 @@ const INTENTS = [
   ['other',   /\b(outra forma|outro jeito|de outra maneira|outra maneira|explica diferente)\b/],
   ['example', /\b(exemplo|exemplos)\b/],
   ['compare', /\b(compar|diferenca|diferente de|versus|vs)\b/],
-  ['visual',  /\b(mostr|visual|imagem|foto|figura|mapa|desenho|ver)\b/],
+  ['visual',  /\b(mostr|visual|visualmente|imagem|foto|figura|mapa|desenho|ver|grafico)\b/],
   ['summary', /\b(resum|resumo|em poucas palavras)/],
   ['why',     /\b(por que|porque|pq|por qual motivo|como acontece|qual a causa)\b/],
 ];
@@ -76,7 +78,7 @@ function compose(c, mode, P) {
     case 'example': return { text: lv(c.ex, b) || def, src: c.exSrc ? 'material' : (c.ex ? 'extra' : 'material') };
     case 'compare': return { text: lv(c.cmp, b) || def, src: 'material' };
     case 'summary': return { text: lv(c.sum, b) || sentences(def, 1), src: 'material' };
-    case 'why': return { text: lv(c.why, b) || def, src: c.why ? 'extra' : 'material' };
+    case 'why': return { text: lv(c.why, b) || def, src: c.why ? (c.whySrc || 'extra') : 'material' };
     case 'visual': return { text: lv(c.visTxt, b) || lv(c.sum, b) || def, src: 'material', vis: c.vis };
     default: return { text: def, src: 'material' };
   }
@@ -133,14 +135,24 @@ EA.Tutor = {
     // resolve o conceito: texto → pronome/intenção → tela → última conversa
     let c = findConcept(pack, input);
     const recent = this.recent && byId(pack, this.recent);
-    if (!c && (PRONOUN.test(t) || intent)) c = recent || byId(pack, ctx.screen.concept) || (last && byId(pack, last.concept));
+    if (intent === 'reviewWrong') {
+      const wq = S ? pack.questions.filter(q => S.wrong[q.id]).sort((a, b) => S.wrong[a.id] - S.wrong[b.id]) : [];
+      if (!wq.length) return { text: 'Você ainda não errou nenhuma questão deste caderno. Quer um teste rápido para começar?', src: 'meta' };
+      this.recent = wq[0].c || this.recent;
+      return { text: `Separei ${Math.min(wq.length, 6)} ${wq.length > 1 ? 'questões que você errou' : 'questão que você errou'}. Vamos refazer.`, src: 'material', concept: wq[0].c, quiz: wq.slice(0, 6) };
+    }
+    if (!c && (PRONOUN.test(t) || intent)) c = recent || byId(pack, ctx.screen.concept) || (last && byId(pack, last.concept)) || (pack.focus && byId(pack, pack.focus));
     if (!c) return offlineAnswer(t, pack);
 
-    if (intent === 'test' || intent === 'exer') {
+    if (intent === 'test' || intent === 'exer' || intent === 'harder') {
       const qs = pack.questions.filter(q => q.c === c.id || (c.rel || []).includes(q.c));
-      const pool = qs.length ? qs : pack.questions.filter(q => q.t === c.t);
+      let pool = qs.length ? qs : pack.questions.filter(q => q.t === c.t);
+      // nível opcional (q.lv 1–3): "fácil" → 1 · "mais difícil" → 3 (só quando o caderno define níveis)
+      const want = intent === 'harder' || /\bdificil|desafiador\b/.test(t) ? 3 : /\b(facil|simples|basico)\b/.test(t) ? 1 : 0;
+      if (want && pool.some(q => q.lv)) { const lvl = pool.filter(q => q.lv === want); const near = pool.filter(q => want === 3 ? q.lv >= 2 : q.lv <= 1); pool = lvl.length ? lvl : near.length ? near : pool; }
       this.recent = c.id;
-      return { text: intent === 'test' ? `Vamos ver se ficou: ${c.n}.` : `Separei exercícios sobre ${c.n}.`, src: 'material', concept: c.id, quiz: EA.shuffle(pool).slice(0, intent === 'test' ? 2 : 3) };
+      const lbl = want === 3 ? 'mais difíceis' : want === 1 ? 'fáceis' : '';
+      return { text: intent === 'test' ? `Vamos ver se ficou: ${c.n}.` : `Separei exercícios ${lbl ? lbl + ' ' : ''}sobre ${c.n}.`, src: 'material', concept: c.id, quiz: EA.shuffle(pool).slice(0, intent === 'test' ? 2 : 3) };
     }
 
     // correção de erro comum ("Pantanal fica na Amazônia?")

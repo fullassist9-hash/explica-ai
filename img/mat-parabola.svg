@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-label="Parábola com vértice destacado">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B2A4A"/><stop offset="1" stop-color="#123E6B"/></linearGradient></defs>
+  <rect width="960" height="600" fill="url(#g)"/>
+  <g stroke="#ffffff" stroke-opacity=".08" stroke-width="2">
+    <path d="M0 100H960M0 200H960M0 300H960M0 400H960M0 500H960M120 0V600M240 0V600M360 0V600M480 0V600M600 0V600M720 0V600M840 0V600"/>
+  </g>
+  <path d="M60 470H900M480 40V560" stroke="#9FB4CC" stroke-width="3"/>
+  <path d="M480 40V560" stroke="#F2B544" stroke-width="3" stroke-dasharray="14 10"/>
+  <path d="M170 70 Q480 830 790 70" fill="none" stroke="#5CC8FF" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="480" cy="450" r="22" fill="#F2B544" stroke="#ffffff" stroke-width="6"/>
+  <text x="510" y="430" font-family="Lexend, Arial, sans-serif" font-size="40" font-weight="700" fill="#F2B544">V (x_v, y_v)</text>
+  <text x="500" y="90" font-family="Lexend, Arial, sans-serif" font-size="30" fill="#F2B544">x = x_v</text>
+</svg>
