@@ -166,7 +166,7 @@ let speakingBtn = null;
 /* Matemática falada: “x_v = −b/(2a)” → “xis vê igual a menos b sobre 2 a”. */
 const speakMath = (t) => String(t)
   .replace(/<[^>]+>/g, ' ').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&nbsp;/g, ' ').replace(/&amp;/g, ' e ')
-  .replace(/\bx_v\b/g, 'xis vê').replace(/\by_v\b/g, 'ípsilon vê').replace(/\bt_v\b/g, 'tê vê').replace(/x₁/g, 'xis um').replace(/x₂/g, 'xis dois')
+  .replace(/\bx_v\b/g, 'xis vê').replace(/\bx v\b/g, 'xis vê').replace(/\by v\b/g, 'ípsilon vê').replace(/\by_v\b/g, 'ípsilon vê').replace(/\bt_v\b/g, 'tê vê').replace(/x₁/g, 'xis um').replace(/x₂/g, 'xis dois')
   .replace(/([A-Za-z0-9)])²/g, '$1 ao quadrado').replace(/([A-Za-z0-9)])³/g, '$1 ao cubo')
   .replace(/\b([a-zA-Z])\(([\p{L}\d ]{1,8})\)/gu, '$1 de $2')
   .replace(/[−–]/g, ' menos ').replace(/(^|[\s(=,])-(?=\s?[\dA-Za-zΔ(])/g, '$1 menos ')
@@ -176,12 +176,25 @@ const speakMath = (t) => String(t)
   .replace(/(\d)([a-zA-Z])/g, '$1 $2').replace(/\bx\b/g, 'xis').replace(/\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ]{3,}\b/g, w => w.toLowerCase()).replace(/→/g, ', ').replace(/×/g, ' ou ')
   .replace(/[^\p{L}\p{N}\s.,:;!?()]/gu, ' ').replace(/[()]/g, ' ').replace(/\s+([.,:;!?])/g, '$1').replace(/\s+/g, ' ').trim();
 EA.speakMath = speakMath;
+/* Voz gravada (neural, gerada antes): manifest.json + <hash>.mp3 por texto falado. Toca o arquivo quando existe;
+   senão cai na voz do aparelho. Hash = FNV-1a 32 bits sobre o texto já em "matemática falada" (igual ao gerador). */
+const fnv = EA.audioKey = (s) => { let h = 0x811c9dc5; for (const ch of s) { h ^= ch.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); };
+EA.audioPack = null; let player = null;
+EA.loadAudio = (base) => fetch(base + 'manifest.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(m => { if (m && m.files) EA.audioPack = { base, ...m }; return EA.audioPack; }).catch(() => null);
+const stopAll = EA.stopSpeech = () => { if ('speechSynthesis' in window) speechSynthesis.cancel(); if (player) { player.pause(); player = null; } };
 EA.say = (text, btn) => {
-  if (!EA.settings.sound || !('speechSynthesis' in window) || !text) return;
-  speechSynthesis.cancel();
-  if (!voice) pickVoice();
+  if (!EA.settings.sound || !text) return;
+  stopAll();
   if (speakingBtn) speakingBtn.classList.remove('speaking');
   if (btn) { speakingBtn = btn; btn.classList.add('speaking'); }
+  const key = fnv(speakMath(text)), ap = EA.audioPack;
+  if (ap && ap.files[key] && EA.settings.recorded !== false) {
+    player = new Audio(ap.base + key + '.mp3'); EA.lastAudio = player.src; player.playbackRate = EA.settings.voiceRate && EA.settings.voiceRate < 1 ? .95 : 1;
+    player.onended = player.onerror = () => btn && btn.classList.remove('speaking');
+    player.play().catch(() => btn && btn.classList.remove('speaking')); return;
+  }
+  if (!('speechSynthesis' in window)) { btn && btn.classList.remove('speaking'); return; }
+  if (!voice) pickVoice();
   // frases curtas em fila: evita o corte de ~15 s do Chrome Android e deixa a entonação natural
   const parts = speakMath(text).match(/[^.!?;:]+[.!?;:]?/g) || [];
   parts.forEach((p, k) => { const u = new SpeechSynthesisUtterance(p.trim()); u.lang = voice ? voice.lang : 'pt-BR'; if (voice) u.voice = voice;

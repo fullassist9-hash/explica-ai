@@ -25,7 +25,7 @@ EA.onProgress = () => {
 };
 const sb = $('#soundBtn');
 function paintSound() { sb.innerHTML = EA.icon(EA.settings.sound ? 'soundOn' : 'soundOff', 22); sb.classList.toggle('off', !EA.settings.sound); sb.setAttribute('aria-label', EA.settings.sound ? 'Som ligado' : 'Som desligado'); }
-sb.onclick = () => { EA.settings.sound = !EA.settings.sound; EA.saveSettings(); paintSound(); if (!EA.settings.sound && 'speechSynthesis' in window) speechSynthesis.cancel(); fx.tap(); toast(EA.settings.sound ? 'Som ligado' : 'Som desligado', 1200); };
+sb.onclick = () => { EA.settings.sound = !EA.settings.sound; EA.saveSettings(); paintSound(); if (!EA.settings.sound) EA.stopSpeech(); fx.tap(); toast(EA.settings.sound ? 'Som ligado' : 'Som desligado', 1200); };
 paintSound();
 
 /* ---------- sheets ---------- */
@@ -237,7 +237,7 @@ function globalHome() {
 /* ---------- roteador ---------- */
 function route() {
   const parts = location.hash.replace(/^#\/?/, '').split('?')[0].split('/').filter(Boolean);
-  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  EA.stopSpeech();
   closeSheet(true);
   view.innerHTML = '';
   const prof = EA.profiles.active();
